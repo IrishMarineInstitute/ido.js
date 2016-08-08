@@ -1,0 +1,28 @@
+{
+  "name": "ido",
+  "version": "0.1.0",
+  "description": "Library functions and widgets from the Irish Digital Ocean.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IrishMarineInstitute/ido.js.git"
+  },
+  "keywords": [
+    "Marine",
+    "Ocean",
+    "Widgets"
+  ],
+  "author": "Irish Marine Institute",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IrishMarineInstitute/ido.js/issues"
+  },
+  "homepage": "https://github.com/IrishMarineInstitute/ido.js#readme",
+  "dependencies": {
+    "highcharts": "^4.2.6",
+    "mqtt": "^1.13.0"
+  }
+}

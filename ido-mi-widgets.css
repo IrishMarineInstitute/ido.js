@@ -1,0 +1,50 @@
+    .widget {
+        width: 375px;
+        height: 265px;
+        background: white;
+        border: 1px solid #ccc;
+    }
+
+    .widget-title {
+        margin-left: 4px;
+    }
+
+
+.widget{width:375px;height:365px;background:#fff;border:1px solid #ccc}
+.widget-clean{width:270px;height:auto;background:#fff;border:1px solid #ccc}
+.widget-header{height:30px;width:100%;padding-top:3px;padding-left:5px;background:#eee;border-bottom:1px solid #ccc;cursor:move}
+.widget-body{padding:0 1px 0 1px;position:relative}
+.widget-title{display:inline-block;font-size:16px}
+.widget-border{background:#fff;border:1px solid #ccc}
+
+.ss-container{position:relative}
+.ss-container>div{position:absolute}
+.ss-container>div[data-ss-colspan='2']{width:170px}.ss-container .ss-placeholder-child{background:transparent;border:1px dashed #333;z-index:-5}
+.ss-trash{position:relative;border:1px solid #555;height:100px;padding-top:2.5em;text-align:center}
+.ss-trash>div{position:absolute}
+.ss-trash>div[data-ss-colspan='2']{width:170px}.ss-trash .ss-placeholder-child{background:transparent;border:1px dashed #333;z-index:-5}
+
+
+
+
+.trash-glow-on{border:2px solid red!important;-moz-transition:border 1s;-webkit-transition:border 1s;-o-transition:border 1s;transition:border 1s}
+.trash-glow-off{border:2px solid #555!important;-moz-transition:border 2s;-webkit-transition:border 2s;-o-transition:border 2s;transition:border 2s}
+.trashing{border:1px solid #bf3131!important}
+.trashing
+
+.widget-header{background-color:#bf3131!important}
+
+.widget-body .chart-checkboxes{position:absolute;top:30px;right:10px}
+
+
+
+.chart-container{position:relative;padding-top:10px;padding-right:10px}
+.chart-container-clean{position:relative;padding-left:4px;padding-right:4px;margin-bottom:20px}
+.chart-body{height:280px}
+.chart-container-clean .chart-body{height:60px}
+.chart-title{display:inline-block;font-size:16px}
+.chart-checkboxes{background-color:#fff;padding-left:7px;z-index:4}
+
+
+
+.chart-checkboxes .checkbox{margin-right:12px;margin-bottom:0}.checkbox

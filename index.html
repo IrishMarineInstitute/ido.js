@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="ido-mi-widgets.css">
+  <script src="ido.js"></script>
+  <script>
+  function ready(fn) {
+  if (document.readyState != 'loading'){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+ready(function(){
+  ido.mi.spiddal.ctd.widget("#ctd");
+  ido.mi.spiddal.fluorometer.widget("#fluorometer");
+});
+</script>
+
+</head>
+<body>
+  <div id="ctd"></div>
+  <div id="fluorometer"></div>
+</body>
+</html>
