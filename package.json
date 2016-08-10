@@ -4,8 +4,10 @@
   "description": "Library functions and widgets from the Irish Digital Ocean.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "testx": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --require co-mocha js/*.spec.js"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IrishMarineInstitute/ido.js.git"
@@ -21,6 +23,13 @@
     "url": "https://github.com/IrishMarineInstitute/ido.js/issues"
   },
   "homepage": "https://github.com/IrishMarineInstitute/ido.js#readme",
+  "devDependencies": {
+    "chai": "3.5.0",
+    "co-mocha": "1.1.2",
+    "mocha": "2.5.3",
+    "sinon": "1.17.4",
+    "sinon-chai": "2.8.0"
+  },
   "dependencies": {
     "highcharts": "^4.2.6",
     "mqtt": "^1.13.0"

@@ -6985,7 +6985,9 @@ function hasOwnProperty(obj, prop) {
 },{"./support/isBuffer":33,"_process":9,"inherits":7}],35:[function(require,module,exports){
 'use strict';
 
-function Exceliot(){
+function Exceliot(options){
+  options = options || {}
+  this.async = options.async === false?false:true;
   this.data = {};
   this.listeners = {};
 }
@@ -7041,9 +7043,9 @@ Exceliot.prototype = {
     on: function(fq_key,callback){
        this.add_listener(fq_key,null,callback);
     },
-    registered: function(namespace){
+    registered: function(namespace,properties){
       var that = this;
-      return {
+      var obj = {
          on: function(key,cb){
             that.on(namespace+'_'+key,cb);
          },
@@ -7051,16 +7053,39 @@ Exceliot.prototype = {
             that.set(namespace+'_'+key,val,cb);
          }
       }
+      for(var i=0;i<properties.length;i++){
+        var property = properties[i];
+        var key = property.key;
+        var fqprop = namespace+'_'+key;
+        var local_property = {
+          set: function (key,x) { this.set(key,x); }.bind(that,fqprop),
+          get: function (key,x) { return this.data[key]; }.bind(that,fqprop)
+        };
+        var ns_property = {
+             set: function (key,x) { this.set(key,x); }.bind(that,fqprop),
+             get: function (key,x) { return this.data[key]; }.bind(that,fqprop)
+        };
+        if(property.readonly){
+          local_property.set = function(key,x){throw "Cannot assign value to readonly property "+key}.bind(null,key);
+          ns_property.set = function (key,x){ throw "Cannot assign value to readonly property "+key}.bind(null,fqprop);
+        }
+        Object.defineProperty(obj, property.key, local_property);
+        Object.defineProperty(that, fqprop, ns_property);
+      }
+      return obj;
     },
     register: function(namespace,obj){
       var keys = Object.keys(obj);
+      var properties = [];
       for(var i=0;i<keys.length;i++){
        var key = keys[i];
        if(key.startsWith("__")){
           // it's private.
           continue;
        }
+       var property = {key: key, readonly: false};
        if(typeof obj[key] == "function"){
+         property.readonly = true;
          var fn = obj[key];
          fn.namespace = namespace;
          var args = this.argumentNames(fn);
@@ -7073,8 +7098,14 @@ Exceliot.prototype = {
        }else{
           this.set(namespace+'_'+key,obj[key]);
         }
+        properties.push(property);
       }
-      return this.registered(namespace);
+      var model = this.registered(namespace,properties);
+      Object.defineProperty(this, namespace, {
+        get: function () { return this; }.bind(model)
+       });
+       return model;
+
    },
     user_callback: function(fn,oldVal,newVal){
        return function(){fn(oldVal,newVal);};
@@ -7114,12 +7145,21 @@ Exceliot.prototype = {
              this.notify(key,oldVal,value);
           }
           if(cb){
-             setTimeout(cb,0);
+            if(this.async){
+              setTimeout(cb,0);
+            }else{
+              cb();
+            }
          }
      },
      set: function(key,value,cb){
         //we will. eventually.
-        setTimeout(this.__set.bind(this,key,value,cb),0);
+        var fn = this.__set.bind(this,key,value,cb);
+        if(this.async){
+          setTimeout(fn,0);
+        }else{
+          fn();
+        }
      }
 };
 
