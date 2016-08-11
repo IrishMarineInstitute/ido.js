@@ -114,7 +114,7 @@ mi_chart_widget.prototype = {
     },
    renderWidgetContainerHtml: function(){
       var el = undefined;
-      if(this.elid.startsWith("#")){
+      if(this.elid.indexOf("#") == 0){
         el = document.getElementById(this.elid.substring(1));
       }
       if(el){
