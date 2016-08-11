@@ -5,6 +5,7 @@ function Exceliot(options){
   this.async = options.async === false?false:true;
   this.data = {};
   this.listeners = {};
+  this.ranges = {};
 }
 Exceliot.prototype = {
     argumentNames: function(fun) {
@@ -41,8 +42,37 @@ Exceliot.prototype = {
        return undefined;
     }
   },
+   __add_range_listener: function(source,target,fn){
+     var extents = source.split("$");
+     if(extents.length == 2){
+       var ns = extents[0].split("_");
+       extents[1] = ns+"_"+extents[1];
+     }
+     var range = this.ranges[key];
+     if(range == undefined){
+       range = {
+         key: source,
+          accepts: function(e0,e1,k){
+             return k>=e0&&k<=e1;
+           }.bind(null,extents[0],extents[1]),
+           listeners: []
+       };
+       this.ranges[key] = range;
+       this.listeners[key] = [];
+     }
+     this.listeners[key].push({"key": target, "fn": fn});
+     var keys = Object.keys(this.listeners);
+     for(var i=0;i<keys.length;i++){
+       if(keys[i].indexOf('$')<0 && range.accepts(keys[i])){
+         this.add_listener(keys[i],target,fn);
+       }
+     }
 
+   },
    add_listener: function(source,target,fn){
+       if(source.indexOf("$")>0){
+         this.__add_range_listener(source,target,fn);
+       }
        if(this.listeners[source] == undefined){
             this.listeners[source] = [];
         }
@@ -94,7 +124,7 @@ Exceliot.prototype = {
       var properties = [];
       for(var i=0;i<keys.length;i++){
        var key = keys[i];
-       if(key.startsWith("__")){
+       if(key.indexOf("__")==0){
           // it's private.
           continue;
        }
@@ -126,8 +156,9 @@ Exceliot.prototype = {
        return function(){fn(oldVal,newVal);};
     },
     notify: function(key,oldVal,newVal){
+           var listeners = [];
            if(this.listeners[key] == undefined){
-              return;
+             return;
            }
            for(var i=0;i<this.listeners[key].length;i++){
              var listener = this.listeners[key][i];

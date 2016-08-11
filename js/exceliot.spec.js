@@ -15,19 +15,26 @@ describe("happy days",function(){
       },
       twenty: function(bar_tenner){
         return 2*bar_tenner;
-      }
+      },
+      /*
+      foo: function(a1$b2){
+        return "hello";
+      }*/
     });
     const model2 = exceliot.register("bar",{
       tenner: function(test_double){
         return test_double*5;
       }
     });
+
+    expect(model.hasOwnProperty('input')).equals(true);
+    expect(model.hasOwnProperty('cheese')).equals(false);
+
     // all the values should be undefine so far.
     expect(model.input).equals(undefined);
     expect(model.double).equals(undefined);
     expect(model.twenty).equals(undefined);
     expect(model2.half).equals(undefined);
-
     // what happens when we set input
     model.input = 2;
     expect(model.input).equals(2);
