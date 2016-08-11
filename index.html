@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Irish Digital Ocean Library and Widgets</title>
-  <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="ido-mi-widgets.css">
   <script src="ido.js"></script>
+
 </head>
 <body>
-
-<div><h3>A widget for the ctd</h3>
+  <div id="tides"></div>
+  <div id="waves"></div>
   <div id="ctd"></div>
-</div>
-<div><h3>A widget for the fluorometer</h3>
   <div id="fluorometer"></div>
-</div>
   <script>
-  ido.mi.spiddal.ctd.widget("#ctd");
-  ido.mi.spiddal.fluorometer.widget("#fluorometer");
-  </script>
+    ido.mi.spiddal.ctd.widget("#ctd");
+    ido.mi.spiddal.fluorometer.widget("#fluorometer");
+    ido.mi.tides.galway.gauge("#tides");
+    ido.mi.waves.galway.gauge("#waves");
+</script>
 </body>
 </html>
