@@ -80,6 +80,9 @@ mi_chart_widget.prototype = {
        var html = this.getWidgetElementHtml(chartElementId,displayTitle,displayUnits);
       try{
         document.getElementById(namespace+"-widget-body").insertAdjacentHTML('beforeend',html);
+        var e = document.createElement('div');
+        e.innerHTML = params.units;
+        var units = e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         var chart = Highcharts.StockChart(Highcharts.merge(Highcharts.theme, {
             yAxis: { title: { text: ' ' }, opposite: false, floor: 0, gridLineWidth: 0, minorGridLineWidth: 0, labels: { enabled: false } },
             series: [{name: displayTitle, data:[]}],
@@ -88,7 +91,7 @@ mi_chart_widget.prototype = {
                 shared: true,
                 valueDecimals: 3,
 
-                valueSuffix: " (" + params.units + ")"
+                valueSuffix: " (" + units + ")"
             },
             chart: {
                renderTo: chartElementId
@@ -165,9 +168,20 @@ mi_chart_widget.prototype = {
 
        // Is any data to be preloaded by ajax?
        if(this.options.preload){
-        this.ajax(this.options.preload.url, function(json){
-           for(var i=0;i<json.data.length;i++){
-             this.model.set(this.options.preload.target,json[this.options.preload.source][i],(function(n){
+        this.ajax(this.options.preload.url, function(data){
+          var parts = this.options.preload.source.split(".");
+          for(var i=0;i<parts.length;i++){
+            if(data){
+              data = data[parts[i]];
+            }
+          }
+          if(data == undefined){
+            console.log("No data found for key "+this.options.preload.source);
+            setTimeout(makeChartsVisibleAndCallUserCallback,0);
+            return;
+          }
+           for(var i=0;i<data.length;i++){
+             this.model.set(this.options.preload.target,data[i],(function(n){
                   if(n == i-1){ // done now.
                      setTimeout(makeChartsVisibleAndCallUserCallback,0);
                   }

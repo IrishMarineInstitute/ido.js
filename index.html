@@ -3,23 +3,18 @@
 <head>
   <link rel="stylesheet" href="ido-mi-widgets.css">
   <script src="ido.js"></script>
-  <script>
-  function ready(fn) {
-  if (document.readyState != 'loading'){
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
-}
-ready(function(){
-  ido.mi.spiddal.ctd.widget("#ctd");
-  ido.mi.spiddal.fluorometer.widget("#fluorometer");
-});
-</script>
 
 </head>
 <body>
+  <div id="tides"></div>
+  <div id="waves"></div>
   <div id="ctd"></div>
   <div id="fluorometer"></div>
+  <script>
+    ido.mi.spiddal.ctd.widget("#ctd");
+    ido.mi.spiddal.fluorometer.widget("#fluorometer");
+    ido.mi.tides.galway.gauge("#tides");
+    ido.mi.waves.galway.gauge("#waves");
+</script>
 </body>
 </html>
