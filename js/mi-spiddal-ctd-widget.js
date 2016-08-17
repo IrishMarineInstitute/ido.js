@@ -43,7 +43,7 @@ var model = function(){
 }
 var widget = function(elid,onModelReady){
       return new mi_charts_widget(elid,{
-                namespace: "spiddal_ctd",
+                namespace: "spiddal-ctd",
                 title: "CTD Readings (-20m)",
                 model: model(),
                 stockcharts: [

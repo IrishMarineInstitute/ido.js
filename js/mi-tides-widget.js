@@ -30,7 +30,7 @@ var gauge = function(station,elid,onModelReady){
   var end_date = d.toISOString();
     var url = 'http://erddap.marine.ie/erddap/tabledap/IrishNationalTideGaugeNetwork.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"';
     return new mi_charts_widget(elid,{
-                namespace: "tide_gauge_"+station.replace(/\s+/g, '_').toLowerCase(),
+                namespace: "tide-gauge-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Gauge",
                 model: model(),
                 stockcharts: [

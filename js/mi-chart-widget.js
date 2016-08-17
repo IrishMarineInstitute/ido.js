@@ -38,7 +38,7 @@ mi_chart_widget.prototype = {
     html.push("</span>");
     html.push(" </span>");
     html.push(" <span style='position:absolute; right:10px; bottom:0;'>");
-    html.push("   <span id='"+el_id+"_latest' class='chart-latest-value'>00.00</span>")
+    html.push("   <span id='"+el_id+"_latest' class='chart-latest-value'></span>")
     html.push("   <span class='chart-latest-units'>"+units+"</span>");
     html.push(" </span>");
     html.push("</div>");
@@ -75,9 +75,10 @@ mi_chart_widget.prototype = {
        var field = params.field;
        var displayTitle = params.title;
        var displayUnits = params.units;
+       var show_reading = params.show_reading === false?false:true;
 
        var chartElementId = namespace+"_"+field+"_chart";
-       var html = this.getWidgetElementHtml(chartElementId,displayTitle,displayUnits);
+       var html = this.getWidgetElementHtml(chartElementId,displayTitle,show_reading?displayUnits:"");
       try{
         document.getElementById(namespace+"-widget-body").insertAdjacentHTML('beforeend',html);
         var e = document.createElement('div');
@@ -98,19 +99,30 @@ mi_chart_widget.prototype = {
              }
          }));
         chart.series[0].setVisible(false,false);
-        model.on(field,function(val){
+        model.on(field,function(show_reading,val){
            var shift = chart.series[0].length >= 4000;
            var value = val[field];
            chart.series[0].addPoint([val.timestamp,value], true, shift);
-           try{
-             value  = value.toFixed(3);
-           }catch(e){}
-           document.getElementById(chartElementId+"_latest").innerText = value;
-        });
+           if(show_reading){
+             try{
+               value  = value.toFixed(3);
+             }catch(e){}
+             document.getElementById(chartElementId+"_latest").innerText = value;
+           }
+        }.bind(null,show_reading));
         return chart;
        }catch(e){
           console.log(e);
        }
+    },
+    createCustom: function(model,namespace,params){
+      var field = params.field;
+      var elementId = namespace+"_"+field+"_custom_"+ new Date().getTime()*1000;
+      var html = '<div id="'+elementId+'" ></div>';
+      document.getElementById(namespace+"-widget-body").insertAdjacentHTML('beforeend',html);
+      var el = document.getElementById(elementId);
+      model.on(field,params.on.bind(null,el));
+
     },
    renderWidgetContainerHtml: function(){
       var el = undefined;
@@ -133,6 +145,12 @@ mi_chart_widget.prototype = {
       if(this.options.stockcharts){
         for(var i=0;i<this.options.stockcharts.length;i++){
           charts.push(this.createChart(this.model,this.namespace,this.options.stockcharts[i]));
+        }
+      }
+      // are any custom divs?
+      if(this.options.custom){
+        for(var i=0;i<this.options.custom.length;i++){
+          this.createCustom(this.model,this.namespace,this.options.custom[i]);
         }
       }
 

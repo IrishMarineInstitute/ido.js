@@ -4,8 +4,8 @@ function Exceliot(options){
   options = options || {}
   this.async = options.async === false?false:true;
   this.data = {};
+  this.seen = {};
   this.listeners = {};
-  this.ranges = {};
 }
 Exceliot.prototype = {
     argumentNames: function(fun) {
@@ -36,43 +36,20 @@ Exceliot.prototype = {
   dispatch: function(fn, args){
     try{
       fn = (typeof fn == "function") ? fn : window[fn];  // Allow fn to be a function object or the name of a global function
+      if(args){
+        for(var i=0;i<args.length;i++){
+          if (typeof args[i] == 'function'){
+            args[i] = args[i]();
+          }
+        }
+      }
       return fn.apply(this.functions(), args || []);  // args is optional, use an empty array by default
     }catch(e){
        console.log(e);
        return undefined;
     }
   },
-   __add_range_listener: function(source,target,fn){
-     var extents = source.split("$");
-     if(extents.length == 2){
-       var ns = extents[0].split("_");
-       extents[1] = ns+"_"+extents[1];
-     }
-     var range = this.ranges[key];
-     if(range == undefined){
-       range = {
-         key: source,
-          accepts: function(e0,e1,k){
-             return k>=e0&&k<=e1;
-           }.bind(null,extents[0],extents[1]),
-           listeners: []
-       };
-       this.ranges[key] = range;
-       this.listeners[key] = [];
-     }
-     this.listeners[key].push({"key": target, "fn": fn});
-     var keys = Object.keys(this.listeners);
-     for(var i=0;i<keys.length;i++){
-       if(keys[i].indexOf('$')<0 && range.accepts(keys[i])){
-         this.add_listener(keys[i],target,fn);
-       }
-     }
-
-   },
    add_listener: function(source,target,fn){
-       if(source.indexOf("$")>0){
-         this.__add_range_listener(source,target,fn);
-       }
        if(this.listeners[source] == undefined){
             this.listeners[source] = [];
         }
@@ -120,6 +97,9 @@ Exceliot.prototype = {
       return obj;
     },
     register: function(namespace,obj){
+      if(/[\s_]/.test(namespace)){
+        throw "Illegal namespace '"+namespace+"'. Underscores and whitespace are not allowed";
+      }
       var keys = Object.keys(obj);
       var properties = [];
       for(var i=0;i<keys.length;i++){
@@ -170,43 +150,53 @@ Exceliot.prototype = {
              var x = this.argumentNames(listener.fn);
              var params = [];
              for(var j=0;j<x.length;j++){
-              var varName = x[j];
-              if(varName == "_"){
-                varName = listener.key;
+               var varName = x[j];
+               if(varName == "_"){
+                 varName = listener.key;
+                }
+                var valueKey = this.with_namespace(varName,listener.fn.namespace);
+                var value = this.data[valueKey];
+                if (value === undefined ||
+                  value === null ||
+                  typeof value === 'string' ||
+                   value instanceof String ||
+                   typeof value === 'number' ||
+                   typeof value === 'boolean'){
+                     params.push(value);
+                }else{
+                     value = JSON.parse(JSON.stringify(value));
+                     params.push(value);
+                }
               }
-              var valueKey = this.with_namespace(varName,listener.fn.namespace);
-              var value = this.data[valueKey];
-              if(value !== undefined && value !== null){
-                value = JSON.parse(JSON.stringify(value));
-              }
-              params.push(value);
-             }
-             this.set(listener.key,this.dispatch(listener.fn,params));
-           }
+              this.set(listener.key,this.dispatch(listener.fn,params),null,true);
+            }
+
        },
-     __set: function(key,value,cb){
-          var oldVal = this.data[key];
-          if( oldVal !== value){
-             this.data[key] = value;
-             this.notify(key,oldVal,value);
-          }
-          if(cb){
+     set: function(key,value,cb,immediate){
+      var fn = function(key,newValue,cb){
+         var oldValue = this.data[key];
+         var same = oldValue == newValue;
+         if(oldValue && newValue && !same){
+           same = JSON.stringify(oldValue) === JSON.stringify(newValue);
+         }
+         if(!same){
+           this.data[key] = newValue;
+           this.notify(key,oldValue,newValue);
+         }
+         if(cb){
             if(this.async){
-              setTimeout(cb,0);
+             setTimeout(cb,0);
             }else{
               cb();
             }
          }
-     },
-     set: function(key,value,cb){
-        //we will. eventually.
-        var fn = this.__set.bind(this,key,value,cb);
-        if(this.async){
+      }.bind(this,key,value,cb);
+      if(this.async && !immediate){
           setTimeout(fn,0);
-        }else{
-          fn();
-        }
+      }else{
+        fn();
      }
+   }
 };
 
 module.exports = Exceliot;

@@ -52,7 +52,7 @@ var gauge = function(station,elid,onModelReady){
   var end_date = d.toISOString();
     var url = 'http://erddap.marine.ie/erddap/tabledap/IWaveBNetwork30Min.json?time,SeaTemperature,SignificantWaveHeight&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"&SeaTemperature!=0.0000&PeakPeriod>=0';
     return new mi_charts_widget(elid,{
-                namespace: "wave_buoy_"+station.replace(/\s+/g, '-').toLowerCase(),
+                namespace: "wave-buoy-"+station.replace(/[\s+_]/g, '-').toLowerCase(),
                 title: "Wave Buoy",
                 model: model(station),
                 stockcharts: [

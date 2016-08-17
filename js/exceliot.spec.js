@@ -2,8 +2,8 @@ const Exceliot = require("./exceliot");
 var chai = require('chai');
 var expect = chai.expect;
 
-describe("happy days",function(){
-    it("checks async", function(){
+describe("exceliot model",function(){
+    it("works on a happy day", function(){
     const exceliot = new Exceliot({async: false});
     const model = exceliot.register("test",{
       input: undefined,
@@ -15,11 +15,7 @@ describe("happy days",function(){
       },
       twenty: function(bar_tenner){
         return 2*bar_tenner;
-      },
-      /*
-      foo: function(a1$b2){
-        return "hello";
-      }*/
+      }
     });
     const model2 = exceliot.register("bar",{
       tenner: function(test_double){
@@ -58,5 +54,31 @@ describe("happy days",function(){
     expect(function(){model.double=3;}).to.throw(/Cannot assign value to readonly property/);
     expect(function(){exceliot.test.double=3;}).to.throw(/Cannot assign value to readonly property/);
     expect(function(){exceliot.test_double=3;}).to.throw(/Cannot assign value to readonly property/);
+  });
+  it("raises if bad namespace", function(){
+    const exceliot = new Exceliot({async: false});
+    expect(function(){
+      exceliot.register("a_b",{foo: null});
+    }).to.throw(/Illegal namespace/);
+  });
+  it("passes previous value", function(){
+    const exceliot = new Exceliot({async: false});
+    const model = exceliot.register("test",{
+      a: null,
+      count: function(_,a){
+        return _ == undefined?1:_+1;
+      },
+      count2: function(_,a){
+        return _ == undefined? {value: 1} : {value: _.value+1};
+      },
+      count3: function(_,a){
+        return _ == undefined? { x: { value: 1} } : { x: { value: _.x.value+1}};
+      }
+    });
+    model.a=500;
+    model.a=1000;
+    expect(model.count).equals(2);
+    expect(model.count2.value).equals(2);
+    expect(model.count3.x.value).equals(2);
   });
 })

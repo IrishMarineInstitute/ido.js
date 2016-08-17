@@ -16,6 +16,8 @@ const tides = require('./mi-tides-widget');
 window.ido.mi.tides = window.ido.mi.tides || {};
 window.ido.mi.tides.galway = window.ido.mi.tides.galway || {};
 window.ido.mi.tides.galway.gauge = window.ido.mi.tides.galway.gauge || tides.gauge.bind(this,"Galway Port");
+const tidecast = require('./mi-tides-forecast-widget');
+window.ido.mi.tides.galway.forecast = window.ido.mi.tides.galway.forecast || tidecast.forecast.bind(this,"Galway_Port");
 
 const waves = require('./mi-waves-widget');
 window.ido.mi.waves = window.ido.mi.waves || {};

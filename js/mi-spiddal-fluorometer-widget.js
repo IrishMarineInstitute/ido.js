@@ -38,7 +38,7 @@ var model = function(){
 
 var widget = function(elid,onModelReady){
     return new mi_charts_widget(elid,{
-                namespace: "spiddal_fluorometer",
+                namespace: "spiddal-fluorometer",
                 title: "Fluorometer (-20m)",
                 model: model(),
                 stockcharts: [

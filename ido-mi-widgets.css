@@ -1,3 +1,10 @@
+.widget-text{
+  font-size: 15px;
+  font-family: 'Century Gothic';
+}
+.widget-table{
+  padding:0px 5px 0px 5px;
+}
     .widget {
         width: 375px;
         height: 265px;
