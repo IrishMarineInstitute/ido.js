@@ -1,22 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="ido-mi-widgets.css">
+  <title>IDO Widget Teaser</title>
   <script src="ido.js"></script>
-
 </head>
 <body>
-  <div id="tidecast"></div>
-  <div id="tides"></div>
-  <div id="waves"></div>
-  <div id="ctd"></div>
-  <div id="fluorometer"></div>
-  <script>
-    ido.mi.tides.dublin.forecast("#tidecast");
-    ido.mi.spiddal.ctd.widget("#ctd");
-    ido.mi.spiddal.fluorometer.widget("#fluorometer");
-    ido.mi.tides.galway.gauge("#tides");
-    ido.mi.waves.galway.gauge("#waves");
-</script>
+  <p>View the page source to see the widgets...</p>
+  <div class="ido-widget" data-widget="mi.ctd.spiddal"></div>
+  <div class="ido-widget" data-widget="mi.fluorometer.spiddal"></div>
+  <div class="ido-widget" data-widget="mi.tidesforecast.galway"></div>
+  <div class="ido-widget" data-widget="mi.tides.galway"></div>
+  <div class="ido-widget" data-widget="mi.waves.galway"></div>
 </body>
 </html>

@@ -1,4 +1,5 @@
 'use strict';
+var css = require('../css/main.css');
 var mqtt = require('mqtt');
 var mqtt_feed = require('./mqtt-feed');
 window.ido = window.ido || {};
@@ -8,31 +9,34 @@ try{
 }catch(e){
   console.log("could not connect to mqtt feed http://mqtt.marine.ie",e);
 }
-window.ido.mi.spiddal = window.ido.mi.spiddal || {};
-window.ido.mi.spiddal.ctd = require('./mi-spiddal-ctd-widget');
-window.ido.mi.spiddal.fluorometer = require('./mi-spiddal-fluorometer-widget');
+window.ido.mi.ctd = window.ido.mi.ctd || {};
+window.ido.mi.ctd.spiddal = window.ido.mi.ctd.spiddal || require('./mi-spiddal-ctd-widget');
+
+window.ido.mi.fluorometer = window.ido.mi.fluorometer || {};
+window.ido.mi.fluorometer.spiddal = window.ido.mi.fluorometer.spiddal || require('./mi-spiddal-fluorometer-widget');
 
 const tides = require('./mi-tides-widget');
-window.ido.mi.tides = window.ido.mi.tides || {};
-window.ido.mi.tides.galway = window.ido.mi.tides.galway || {};
-window.ido.mi.tides.galway.gauge = window.ido.mi.tides.galway.gauge || tides.gauge.bind(this,"Galway Port");
 const tidecast = require('./mi-tides-forecast-widget');
+window.ido.mi.tides = window.ido.mi.tides || {};
+window.ido.mi.tidesforecast = window.ido.mi.tidesforecast || {};
 
-window.ido.mi.tides.sites = {
-  galway: "Galway_Port",
-  dublin: "Dublin_Port",
-  howth: "Howth_Harbour",
-  killybegs: "Killybegs_Port",
-  malinhead: "Malin_Head",
-  ballyglass: "Ballyglass",
-  aranmore: "Aranmore",
-  ballycotton: "Ballycotton",
+var tidesites = {
+  galway: {tidesforecast:"Galway_Port", tides:"Galway Port"},
+  dublin: {tidesforecast:"Dublin_Port", tides:"Dublin Port"},
+  howth: {tidesforecast:"Howth_Harbour", tides:"Howth Harbour"},
+  killybegs: {tidesforecast:"Killybegs_Port", tides:"Killybegs Port"},
+  malinhead: {tidesforecast:"Malin_Head", tides:"Malin Head"},
+  ballyglass: {tidesforecast:"Ballyglass", tides:"Ballyglass"},
+  aranmore: {tidesforecast:"Aranmore", tides:"Aranmore"},
+  ballycotton: {tidesforecast:"Ballycotton", tides:"Ballycotton"},
 };
 {
-  var keys = Object.keys(window.ido.mi.tides.sites);
+  var keys = Object.keys(tidesites);
   for(var i=0;i<keys.length;i++){
     window.ido.mi.tides[keys[i]] = window.ido.mi.tides[keys[i]] || {};
-    window.ido.mi.tides[keys[i]].forecast = window.ido.mi.tides[keys[i]].forecast || tidecast.forecast.bind(this,window.ido.mi.tides.sites[keys[i]]);
+    window.ido.mi.tides[keys[i]].widget = window.ido.mi.tides[keys[i]].widget || tides.gauge.bind(this,tidesites[keys[i]].tides);
+    window.ido.mi.tidesforecast[keys[i]] = window.ido.mi.tidesforecast[keys[i]] || {};
+    window.ido.mi.tidesforecast[keys[i]].widget = window.ido.mi.tidesforecast[keys[i]].widget || tidecast.forecast.bind(this,tidesites[keys[i]].tidesforecast);
   }
 }
 
@@ -40,4 +44,34 @@ window.ido.mi.tides.sites = {
 const waves = require('./mi-waves-widget');
 window.ido.mi.waves = window.ido.mi.waves || {};
 window.ido.mi.waves.galway = window.ido.mi.waves.galway || {};
-window.ido.mi.waves.galway.gauge = window.ido.mi.waves.galway.gauge || waves.gauge.bind(this,"Galway Bay Wave Buoy");
+window.ido.mi.waves.galway.widget = window.ido.mi.waves.galway.widget || waves.gauge.bind(this,"Galway Bay Wave Buoy");
+
+
+
+var docReady = require('doc-ready');
+// find and load widgets on page.
+docReady( function() {
+  var pre = "_"+(new Date()).getTime()+"_";
+  var n = 0;
+  var elements = document.getElementsByClassName("ido-widget");
+  for (i = 0; i < elements.length; i++) {
+    var el = elements[i];
+    if(el.hasAttribute("data-widget")){
+      var elid =  "ido_widget"+pre+n++;
+      el.innerHTML = "<div id='"+elid+"'></div>";
+      var wanted = "" + el.getAttribute("data-widget");
+      var parts = wanted.split(/\./);
+      var path = window.ido;
+      for(var j=0;j<parts.length;j++){
+        if(path){
+          path = path[parts[j]];
+        }
+      }
+      if(path && path.widget){
+        path.widget("#"+elid);
+      }else{
+        console.log("no widget found for "+wanted);
+      }
+    }
+  }
+});

@@ -58,8 +58,7 @@ var model = function(){
           return _;
         }
         var highlow = tworeadings.previous.tide == "rising"?"High":"Low";
-        var prev_timestamp = _?_.timestamp:null;
-        return {timestamp: tworeadings.previous.timestamp, waterLevel: tworeadings.previous.waterLevel, tide: highlow, prev_timestamp: prev_timestamp};
+        return {timestamp: tworeadings.previous.timestamp, waterLevel: tworeadings.previous.waterLevel, tide: highlow};
       }
   };
 }
@@ -91,7 +90,7 @@ var forecast = function(station,elid,onModelReady){
                       var td = new Date(tide.timestamp).toUTCString();
                       var date = td.substring(0,11);
                       var time = td.substring(17,22);
-                      var date_changed = tide.prev_timestamp?new Date(tide.prev_timestamp).toUTCString().substring(0,11) != date : true;
+                      var date_changed = tide.timestamp?new Date(tide.timestamp).toUTCString().substring(0,11) != date : true;
                       var html = [];
                       html.push("<tr><td>")
                       if(date_changed){
