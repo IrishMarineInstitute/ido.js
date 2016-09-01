@@ -94,7 +94,7 @@ var documentation = function(ido,root){
           featureContainer.appendChild(featureDiv);
         }
       }
-      var div3 = createElement("div",["col-xs-5"]);
+      var div3 = createElement("div",["col-xs-7"]);
       div3.appendChild(codeContainer);
       div3.appendChild(demoContainer);
       div.appendChild(div3);
