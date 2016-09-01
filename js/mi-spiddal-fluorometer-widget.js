@@ -47,7 +47,7 @@ var widget = function(elid,onModelReady){
                 ],
                 onModelReady: onModelReady,
                 preload: {
-                    url: 'http://spiddal.marine.ie/data/spiddal-fluorometer-sample.json',
+                    url: '//spiddal.marine.ie/data/spiddal-fluorometer-sample.json',
                     source: "data",
                     target: "raw"
                 },

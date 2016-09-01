@@ -54,7 +54,7 @@ var widget = function(elid,onModelReady){
                 ],
                 onModelReady: onModelReady,
                 preload: {
-                    url: 'http://spiddal.marine.ie/data/spiddal-ctd-sample.json',
+                    url: '//spiddal.marine.ie/data/spiddal-ctd-sample.json',
                     source: "data",
                     target: "raw"
                 },

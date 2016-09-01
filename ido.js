@@ -7771,7 +7771,7 @@ var widget = function(elid,onModelReady){
                 ],
                 onModelReady: onModelReady,
                 preload: {
-                    url: 'http://spiddal.marine.ie/data/spiddal-ctd-sample.json',
+                    url: '//spiddal.marine.ie/data/spiddal-ctd-sample.json',
                     source: "data",
                     target: "raw"
                 },
@@ -7835,7 +7835,7 @@ var widget = function(elid,onModelReady){
                 ],
                 onModelReady: onModelReady,
                 preload: {
-                    url: 'http://spiddal.marine.ie/data/spiddal-fluorometer-sample.json',
+                    url: '//spiddal.marine.ie/data/spiddal-fluorometer-sample.json',
                     source: "data",
                     target: "raw"
                 },
@@ -7920,7 +7920,7 @@ var widget = function(station,elid,onModelReady){
   var start_date = d.toISOString();
   d.setDate(d.getDate() + 2);
   var end_date = d.toISOString();
-    var url = 'http://erddap.marine.ie/erddap/tabledap/IMI-TidePrediction.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&stationID="'+station+'"';
+    var url = '//erddap.marine.ie/erddap/tabledap/IMI-TidePrediction.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&stationID="'+station+'"';
     return new mi_charts_widget(elid,{
                 namespace: "tide-forecast-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Forecast",
@@ -7994,7 +7994,7 @@ var widget = function(station,elid,onModelReady){
   var start_date = d.toISOString();
   d.setDate(d.getDate() + 3);
   var end_date = d.toISOString();
-    var url = 'http://erddap.marine.ie/erddap/tabledap/IrishNationalTideGaugeNetwork.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"';
+    var url = '//erddap.marine.ie/erddap/tabledap/IrishNationalTideGaugeNetwork.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"';
     return new mi_charts_widget(elid,{
                 namespace: "tide-gauge-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Gauge",
@@ -8066,7 +8066,7 @@ var widget = function(station,elid,onModelReady){
   var start_date = d.toISOString();
   d.setDate(d.getDate() + 3);
   var end_date = d.toISOString();
-    var url = 'http://erddap.marine.ie/erddap/tabledap/IWaveBNetwork30Min.json?time,SeaTemperature,SignificantWaveHeight&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"&SeaTemperature!=0.0000&PeakPeriod>=0';
+    var url = '//erddap.marine.ie/erddap/tabledap/IWaveBNetwork30Min.json?time,SeaTemperature,SignificantWaveHeight&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"&SeaTemperature!=0.0000&PeakPeriod>=0';
     return new mi_charts_widget(elid,{
                 namespace: "wave-buoy-"+station.replace(/[\s+_]/g, '-').toLowerCase(),
                 title: "Wave Buoy",

@@ -69,7 +69,7 @@ var widget = function(station,elid,onModelReady){
   var start_date = d.toISOString();
   d.setDate(d.getDate() + 2);
   var end_date = d.toISOString();
-    var url = 'http://erddap.marine.ie/erddap/tabledap/IMI-TidePrediction.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&stationID="'+station+'"';
+    var url = '//erddap.marine.ie/erddap/tabledap/IMI-TidePrediction.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&stationID="'+station+'"';
     return new mi_charts_widget(elid,{
                 namespace: "tide-forecast-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Forecast",

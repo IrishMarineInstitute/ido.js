@@ -50,7 +50,7 @@ var widget = function(station,elid,onModelReady){
   var start_date = d.toISOString();
   d.setDate(d.getDate() + 3);
   var end_date = d.toISOString();
-    var url = 'http://erddap.marine.ie/erddap/tabledap/IWaveBNetwork30Min.json?time,SeaTemperature,SignificantWaveHeight&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"&SeaTemperature!=0.0000&PeakPeriod>=0';
+    var url = '//erddap.marine.ie/erddap/tabledap/IWaveBNetwork30Min.json?time,SeaTemperature,SignificantWaveHeight&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"&SeaTemperature!=0.0000&PeakPeriod>=0';
     return new mi_charts_widget(elid,{
                 namespace: "wave-buoy-"+station.replace(/[\s+_]/g, '-').toLowerCase(),
                 title: "Wave Buoy",
