@@ -8132,9 +8132,9 @@ var mqtt = require('mqtt');
 var mqtt_feed = require('./mqtt-feed');
 var mi = {};
 try{
-  mi.mqtt = new mqtt_feed.wrap(mqtt.connect("http://mqtt.marine.ie"));
+  mi.mqtt = new mqtt_feed.wrap(mqtt.connect("wss://mqtt.marine.ie"));
 }catch(e){
-  console.log("could not connect to mqtt feed http://mqtt.marine.ie",e);
+  console.log("could not connect to mqtt feed wss://mqtt.marine.ie",e);
 }
 
 exports.mqtt = mi.mqtt
