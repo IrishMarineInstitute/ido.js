@@ -107,7 +107,8 @@ mi_chart_widget.prototype = {
              try{
                value  = value.toFixed(3);
              }catch(e){}
-             document.getElementById(chartElementId+"_latest").innerText = value;
+             var el = document.getElementById(chartElementId+"_latest");
+             if(el) el.innerText = value;
            }
         }.bind(null,show_reading));
         return chart;
@@ -157,7 +158,8 @@ mi_chart_widget.prototype = {
       // Is there a standard timestamp field?
       if(this.options.model.timestamp){
        this.model.on("timestamp",function(val){
-          document.getElementById(this.namespace+"-latest-reading").innerText = new Date(val).toUTCString().substr(17, 9);
+          var el = document.getElementById(this.namespace+"-latest-reading");
+          if(el) el.innerText = new Date(val).toUTCString().substr(17, 9);
        }.bind(this));
       }
 
@@ -168,7 +170,7 @@ mi_chart_widget.prototype = {
       }else if(this.options.mqtt){
        subscribe_fn =
          function(model,mqtt){
-           console.log("subscribing to mqtt topic "+mqtt.topic);
+           //console.log("subscribing to mqtt topic "+mqtt.topic);
            ido.mi.mqtt.on(mqtt.topic, function(topic,payload){
                 model.set(mqtt.target,payload.toString());
              });

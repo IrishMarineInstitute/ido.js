@@ -44,7 +44,7 @@ var model = function(station){
   };
 }
 
-var gauge = function(station,elid,onModelReady){
+var widget = function(station,elid,onModelReady){
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -72,4 +72,4 @@ var gauge = function(station,elid,onModelReady){
      });
 };
 exports.model = model;
-exports.gauge = gauge;
+exports.widget = widget;

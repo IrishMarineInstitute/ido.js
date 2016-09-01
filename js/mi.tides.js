@@ -1,19 +1,27 @@
 'use strict';
 
+var locations = require('./mi.locations').locations;
 const tides = require('./mi-tides-widget');
-var tidesites = {
-  galway: {tidesforecast:"Galway_Port", tides:"Galway Port"},
-  dublin: {tidesforecast:"Dublin_Port", tides:"Dublin Port"},
-  howth: {tidesforecast:"Howth_Harbour", tides:"Howth Harbour"},
-  killybegs: {tidesforecast:"Killybegs_Port", tides:"Killybegs Port"},
-  malinhead: {tidesforecast:"Malin_Head", tides:"Malin Head"},
-  ballyglass: {tidesforecast:"Ballyglass", tides:"Ballyglass"},
-  aranmore: {tidesforecast:"Aranmore", tides:"Aranmore"},
-  ballycotton: {tidesforecast:"Ballycotton", tides:"Ballycotton"},
+exports.aranmore = { widget: tides.widget.bind(this,"Aranmore")};
+exports.ballycotton = { widget: tides.widget.bind(this,"Ballycotton")};
+exports.ballyglass = { widget: tides.widget.bind(this,"Ballyglass")};
+exports.dublinport = { widget: tides.widget.bind(this,"Dublin Port")};
+exports.galwayport = { widget: tides.widget.bind(this,"Galway Port")};
+exports.howthharbour = { widget: tides.widget.bind(this,"Howth Harbour")};
+exports.killybegsport = { widget: tides.widget.bind(this,"Killybegs Port")};
+exports.malinhead = { widget: tides.widget.bind(this,"Malin Head")};
+
+exports.meta = {
+  name: "Tides",
+  description: 'Recorded data from the Irish Tides Network',
+  locations: [
+    locations.aranmore,
+    locations.ballycotton,
+    locations.ballyglass,
+    locations.dublinport,
+    locations.galwayport,
+    locations.howthharbour,
+    locations.killybegsport,
+    locations.malinhead,
+  ]
 };
-var keys = Object.keys(tidesites);
-for(var i=0;i<keys.length;i++){
-    var x = {};
-    x.widget = tides.gauge.bind(this,tidesites[keys[i]].tides);
-    exports[keys[i]] = x
-}

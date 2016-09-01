@@ -63,7 +63,7 @@ var model = function(){
   };
 }
 
-var forecast = function(station,elid,onModelReady){
+var widget = function(station,elid,onModelReady){
   var d = new Date();
   d.setDate(d.getDate());
   var start_date = d.toISOString();
@@ -110,4 +110,4 @@ var forecast = function(station,elid,onModelReady){
      });
 };
 exports.model = model;
-exports.forecast = forecast;
+exports.widget = widget;

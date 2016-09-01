@@ -31,6 +31,7 @@
     "sinon-chai": "2.8.0"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "doc-ready": "^1.0.4",
     "highcharts": "^4.2.6",
     "mqtt": "^1.13.0"

@@ -1,7 +1,8 @@
 'use strict';
 var css = require('../css/main.css');
-window.ido = window.ido || {};
-window.ido.mi = window.ido.mi || require('./mi.js');
+var ido = require('./ido.js');
+
+
 
 
 var docReady = require('doc-ready');
@@ -16,6 +17,10 @@ docReady( function() {
       var elid =  "ido_widget"+pre+n++;
       el.innerHTML = "<div id='"+elid+"'></div>";
       var wanted = "" + el.getAttribute("data-widget");
+      if(wanted == "documentation"){
+        ido.documentation(ido,el);
+        continue;
+      }
       var parts = wanted.split(/\./);
       var path = window.ido;
       for(var j=0;j<parts.length;j++){
@@ -31,3 +36,4 @@ docReady( function() {
     }
   }
 });
+window.ido = ido;

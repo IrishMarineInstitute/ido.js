@@ -15,6 +15,16 @@ exports.tidesforecast = require('./mi.tidesforecast');
 exports.tides = require('./mi.tides');
 exports.waves = require('./mi.waves');
 
-exports.types = [
-  {key: "ctd", name: exports.ctd.meta.name},  
-]
+exports.meta = {
+  key:"mi",
+  name: "Irish Marine Institute",
+  description: "The State agency responsible for marine research, \
+  technology development and innovation in Ireland. We provide \
+  scientific and technical advice to Government to help inform \
+  policy and to support the sustainable development of Ireland's \
+  marine resource.",
+  url: "http://www.marine.ie",
+  icon: "http://webapps.marine.ie/virtual_earth_polygon/Images/MISymbol.bmp",
+  logo: "http://www.marine.ie/Home/sites/default/files/MIFiles/Images/General/Marine_logo.jpg",
+  types:  [ "ctd","fluorometer","tidesforecast","tides","waves" ]
+}
