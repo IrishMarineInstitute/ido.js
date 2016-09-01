@@ -7935,7 +7935,7 @@ var widget = function(station,elid,onModelReady){
                       var tableid = el.id+"-hightides";
                       var eltable = document.getElementById(tableid);
                       if(eltable == null){
-                        el.insertAdjacentHTML('beforeend','<table class="widget-table widget-text" id="'+tableid+'"></table>');
+                        el.insertAdjacentHTML('beforeend','<table class="table table-condensed table-striped" id="'+tableid+'"></table>');
                         eltable = document.getElementById(tableid);
                       }
                       var td = new Date(tide.timestamp).toUTCString();
