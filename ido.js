@@ -7256,7 +7256,12 @@ var documentation = function(ido,root){
       el.appendChild(link);
       el.appendChild(createElement("h2",[],provider.meta.name));
       el.appendChild(createElement("p",[],provider.meta.description));
-      el.appendChild(createElement("p",[],"Data services available:"));
+      var p = createElement("p");
+      var a = createElement("a",[],"Irish Digital Ocean");
+      a.setAttribute("href",'#ido_overview');
+      p.appendChild(a);
+      p.appendChild(document.createTextNode(" data services from "+provider.meta.name+":"));
+      el.appendChild(p);
       var listOfservices = createElement('ul');
       el.appendChild(listOfservices);
       for(var i=0;i<provider.meta.types.length;i++){
@@ -7276,6 +7281,9 @@ var documentation = function(ido,root){
     };
       var container = createElement("div",["container"]);
       var overview = createElement("div",["page-header"]);
+      var a = createElement("a");
+      a.setAttribute("name","ido_overview");
+      overview.appendChild(a);
       overview.appendChild(createElement('h1',[],ido.meta.name));
       overview.appendChild(createElement('p',[],ido.meta.description));
       overview.appendChild(createElement('p',[],"Services are provided by:"));
