@@ -23,6 +23,7 @@ exports.wexford = {widget: forecast.widget.bind(this,"Wexford")};
 exports.meta = {
   name: "Tides Forecast",
   description: 'Irish Tides Forecast',
+  features: ["latest","height"],
   locations: [
     locations.aranmore,
     locations.ballyglass,

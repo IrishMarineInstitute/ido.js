@@ -28,8 +28,18 @@ docReady( function() {
           path = path[parts[j]];
         }
       }
+      var options = {};
+      if(el.hasAttribute("data-features")){
+        var features = ""+el.getAttribute("data-features").split(",");
+        for(var k=0;k<features.length;k++){
+          features[k] = features[k].trim();
+        }
+        if(features.length){
+          options.features = features;
+        }
+      }
       if(path && path.widget){
-        path.widget("#"+elid);
+        path.widget("#"+elid,options);
       }else{
         console.log("no widget found for "+wanted);
       }

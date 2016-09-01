@@ -63,7 +63,8 @@ var model = function(){
   };
 }
 
-var widget = function(station,elid,onModelReady){
+var widget = function(station,elid,options){
+  options = options || {};
   var d = new Date();
   d.setDate(d.getDate());
   var start_date = d.toISOString();
@@ -101,7 +102,7 @@ var widget = function(station,elid,onModelReady){
                     }
                   }
                 ],
-                onModelReady: onModelReady,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: url,
                     source: "table.rows",

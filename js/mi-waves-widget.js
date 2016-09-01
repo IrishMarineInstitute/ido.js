@@ -44,7 +44,8 @@ var model = function(station){
   };
 }
 
-var widget = function(station,elid,onModelReady){
+var widget = function(station,elid,options){
+  options = options || {};
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();

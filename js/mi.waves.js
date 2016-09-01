@@ -9,6 +9,7 @@ exports.westwavemk3 = { widget:waves.widget.bind(this,"Westwave MK3")};
 exports.meta = {
   name: "Waves",
   description: 'Data from the Irish Waves Buoy Network',
+  features: ["latest","temperature","height"],
   locations: [
     locations.belmulletbertha,
     locations.belmulletberthb,

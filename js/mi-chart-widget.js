@@ -50,7 +50,7 @@ mi_chart_widget.prototype = {
 
     return html.join("");
   },
-  getWidgetContainerHtml: function(namespace,title){
+  getWidgetContainerHtml: function(namespace,title,latest){
     var html=[];
     html.push("<div>");
     html.push(" <div class='widget-clean'>");
@@ -61,10 +61,11 @@ mi_chart_widget.prototype = {
     html.push(" </div>");
 
     html.push(" <div id='"+namespace+"-widget-body' class='widget-body'>");
-
-    html.push(" <h5 style='text-align: center; margin: 20px;'>");
-    html.push(" Latest Reading: <span id='"+namespace+"-latest-reading'></span> (UTC)");
-    html.push(" </h5>");
+    if(latest){
+      html.push(" <h5 style='text-align: center; margin: 20px;'>");
+      html.push(" Latest Reading: <span id='"+namespace+"-latest-reading'></span> (UTC)");
+      html.push(" </h5>");
+    }
 
     html.push(" </div>");
     html.push(" </div>");
@@ -131,7 +132,7 @@ mi_chart_widget.prototype = {
         el = document.getElementById(this.elid.substring(1));
       }
       if(el){
-        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title);
+        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest == false?false:true);
       }else{
         console.log("could not find element ["+this.elid+"] for "+this.namespace+" widget");
         return;

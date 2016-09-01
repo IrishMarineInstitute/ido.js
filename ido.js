@@ -7221,32 +7221,74 @@ var documentation = function(ido,root){
       p.appendChild(document.createTextNode(" is available for:"));
       div2.appendChild(p);
       var ul = createElement("ul",[]);
-      var demo = createElement("div");
+      var demo = createElement("div",["col-xs-9"]);
       demo.id = "demo_"+prefix
       var codeContainer = createElement("div",["well"]);
       var code = createElement("code",[],
       "Select a location on the left to view the html and live widget");
       codeContainer.appendChild(code);
+      var demoContainer = createElement("div",["row"]);
+      var featureContainer = createElement("div",["col-xs-3"]);
+      demoContainer.appendChild(demo);
+      demoContainer.appendChild(featureContainer);
       for(var i=0;i<service.meta.locations.length;i++){
         var location = service.meta.locations[i];
         var li = createElement("li",[]);
         var li = createElement('li');
         var link = createElement('a');
         link.appendChild(getLocation(service,location));
-        link.addEventListener("click",function(key,service,demo,code){
+        var cb = function(key,service,demo,code,fc,fn){
+          if(fn){
+            fc.loader = fn;
+          }
+          var options = {};
+          var featureEls = fc.getElementsByClassName("feature");
+          var features = [];
+          for(var i=0;i<featureEls.length;i++){
+            featureEls[i].disabled = false;
+            if(featureEls[i].checked){
+              features.push(featureEls[i].getAttribute("name"));
+            }
+          }
+          var featuresCode = "";
+          if(features.length && features.length<featureEls.length){
+            featuresCode = " data-features='"+features.join(",")+"'";
+            options.features = features;
+          }
           code.innerHTML = "&lt;script src='ido.js'&gt;&lt;/script&gt;";
-          code.innerText += "\n<div class='ido-widget' data-widget='"+key+"'></div>";
-          service.widget("#"+demo.id);
-        }.bind(this,prefix+'.'+location.key,service[location.key],demo,code));
+          code.innerText += "\n<div class='ido-widget' data-widget='"+key+"'"+featuresCode+"></div>";
+          service.widget("#"+demo.id,options);
+        }.bind(this,prefix+'.'+location.key,service[location.key],demo,code,featureContainer);
+
+        link.addEventListener("click", cb.bind(this,cb));
         li.appendChild(link);
         ul.appendChild(li);
       }
       div2.appendChild(ul);
       div.appendChild(div2);
-      var div2 = createElement("div",["col-xs-7"]);
-      div2.appendChild(codeContainer);
-      div2.appendChild(demo);
-      div.appendChild(div2);
+      if(service.meta.features){
+        var features = service.meta.features;
+        for(var i=0;i<features.length;i++){
+          var featureDiv = createElement('div',["checkbox"]);
+          var label = createElement("label");
+          var checkbox = createElement("input",["feature"]);
+          checkbox.setAttribute("type","checkbox");
+          checkbox.setAttribute("name",features[i]);
+          checkbox.checked = true;
+          checkbox.disabled = true;
+          checkbox.onchange = function(fc){
+            fc.loader();
+          }.bind(this,featureContainer);
+          label.appendChild(checkbox);
+          label.appendChild(document.createTextNode(features[i]));
+          featureDiv.appendChild(label);
+          featureContainer.appendChild(featureDiv);
+        }
+      }
+      var div3 = createElement("div",["col-xs-5"]);
+      div3.appendChild(codeContainer);
+      div3.appendChild(demoContainer);
+      div.appendChild(div3);
       return div;
     };
     var getProvider = function(provider,prefix,provider_href){
@@ -7345,8 +7387,18 @@ docReady( function() {
           path = path[parts[j]];
         }
       }
+      var options = {};
+      if(el.hasAttribute("data-features")){
+        var features = ""+el.getAttribute("data-features").split(",");
+        for(var k=0;k<features.length;k++){
+          features[k] = features[k].trim();
+        }
+        if(features.length){
+          options.features = features;
+        }
+      }
       if(path && path.widget){
-        path.widget("#"+elid);
+        path.widget("#"+elid,options);
       }else{
         console.log("no widget found for "+wanted);
       }
@@ -7557,7 +7609,7 @@ mi_chart_widget.prototype = {
 
     return html.join("");
   },
-  getWidgetContainerHtml: function(namespace,title){
+  getWidgetContainerHtml: function(namespace,title,latest){
     var html=[];
     html.push("<div>");
     html.push(" <div class='widget-clean'>");
@@ -7568,10 +7620,11 @@ mi_chart_widget.prototype = {
     html.push(" </div>");
 
     html.push(" <div id='"+namespace+"-widget-body' class='widget-body'>");
-
-    html.push(" <h5 style='text-align: center; margin: 20px;'>");
-    html.push(" Latest Reading: <span id='"+namespace+"-latest-reading'></span> (UTC)");
-    html.push(" </h5>");
+    if(latest){
+      html.push(" <h5 style='text-align: center; margin: 20px;'>");
+      html.push(" Latest Reading: <span id='"+namespace+"-latest-reading'></span> (UTC)");
+      html.push(" </h5>");
+    }
 
     html.push(" </div>");
     html.push(" </div>");
@@ -7638,7 +7691,7 @@ mi_chart_widget.prototype = {
         el = document.getElementById(this.elid.substring(1));
       }
       if(el){
-        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title);
+        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest == false?false:true);
       }else{
         console.log("could not find element ["+this.elid+"] for "+this.namespace+" widget");
         return;
@@ -7766,18 +7819,34 @@ var model = function(){
       },
   };
 }
-var widget = function(elid,onModelReady){
-      return new mi_charts_widget(elid,{
+var widget = function(elid,options){
+  options = options || {};
+  options.features = options.features || ["latest","temperature","pressure","conductivity","soundVelocity"];
+  var stockfeatures = {
+    "temperature": {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
+    "pressure": {field: "pressure", title:"Pressure", units: "dbar"},
+    "conductivity": {field: "conductivity", title:"Conductivity", units: "mS/cm" },
+    "soundVelocity": {field: "soundVelocity", title: "Sound Velocity", units: "m/s"}
+  };
+  var features = {};
+  var stockcharts = [];
+  for(var i=0;i<options.features.length;i++){
+    features[options.features[i]] = true;
+    var wanted = stockfeatures[options.features[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
+  if(!features.latest){
+    for(var i=0;i<stockcharts.length;i++){
+      stockcharts[i].show_reading = false;
+    }
+  }
+  return new mi_charts_widget(elid,{
                 namespace: "spiddal-ctd",
                 title: "CTD Readings (-20m)",
                 model: model(),
-                stockcharts: [
-                    {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
-                    {field: "pressure", title:"Pressure", units: "dbar"},
-                    {field: "conductivity", title:"Conductivity", units: "mS/cm" },
-                    {field: "soundVelocity", title: "Sound Velocity", units: "m/s"}
-                ],
-                onModelReady: onModelReady,
+                stockcharts: stockcharts,
+                onModelReady: options.onModelReady,
+                latest: features.latest?true:false,
                 preload: {
                     url: '//spiddal.marine.ie/data/spiddal-ctd-sample.json',
                     source: "data",
@@ -7922,7 +7991,8 @@ var model = function(){
   };
 }
 
-var widget = function(station,elid,onModelReady){
+var widget = function(station,elid,options){
+  options = options || {};
   var d = new Date();
   d.setDate(d.getDate());
   var start_date = d.toISOString();
@@ -7960,7 +8030,7 @@ var widget = function(station,elid,onModelReady){
                     }
                   }
                 ],
-                onModelReady: onModelReady,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: url,
                     source: "table.rows",
@@ -7996,7 +8066,8 @@ var model = function(){
   };
 }
 
-var widget = function(station,elid,onModelReady){
+var widget = function(station,elid,options){
+  options = options || {};
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -8010,7 +8081,7 @@ var widget = function(station,elid,onModelReady){
                 stockcharts: [
                     {field: "height", title: "Tide Height", units: "m"}
                 ],
-                onModelReady: onModelReady,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: url,
                     source: "table.rows",
@@ -8068,7 +8139,8 @@ var model = function(station){
   };
 }
 
-var widget = function(station,elid,onModelReady){
+var widget = function(station,elid,options){
+  options = options || {};
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -8111,6 +8183,7 @@ exports.meta = {
   exert by the seawater above (from which the depth of the sensor is \
   estimated); and these parameters are also used to estimate the \
   speed of sound within the sea.',
+  features: ["latest","temperature","pressure","conductivity","soundVelocity"],
   locations: [
     locations.galwaybay
   ]
@@ -8129,6 +8202,7 @@ exports.meta = {
     and it measures turbidity, or the "cloudiness" of the seawater, \
     caused by the presence of particles such as sediment from \
     the seabed suspended in the water.',
+    features: ["latest","chlorophyll","turbidity"],
   locations: [
     locations.galwaybay
   ]
@@ -8211,6 +8285,7 @@ exports.malinhead = { widget: tides.widget.bind(this,"Malin Head")};
 exports.meta = {
   name: "Tides",
   description: 'Recorded data from the Irish Tides Network',
+  features: ["latest","height"],
   locations: [
     locations.aranmore,
     locations.ballycotton,
@@ -8249,6 +8324,7 @@ exports.wexford = {widget: forecast.widget.bind(this,"Wexford")};
 exports.meta = {
   name: "Tides Forecast",
   description: 'Irish Tides Forecast',
+  features: ["latest","height"],
   locations: [
     locations.aranmore,
     locations.ballyglass,
@@ -8280,6 +8356,7 @@ exports.westwavemk3 = { widget:waves.widget.bind(this,"Westwave MK3")};
 exports.meta = {
   name: "Waves",
   description: 'Data from the Irish Waves Buoy Network',
+  features: ["latest","temperature","height"],
   locations: [
     locations.belmulletbertha,
     locations.belmulletberthb,

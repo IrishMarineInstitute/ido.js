@@ -41,18 +41,34 @@ var model = function(){
       },
   };
 }
-var widget = function(elid,onModelReady){
-      return new mi_charts_widget(elid,{
+var widget = function(elid,options){
+  options = options || {};
+  options.features = options.features || ["latest","temperature","pressure","conductivity","soundVelocity"];
+  var stockfeatures = {
+    "temperature": {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
+    "pressure": {field: "pressure", title:"Pressure", units: "dbar"},
+    "conductivity": {field: "conductivity", title:"Conductivity", units: "mS/cm" },
+    "soundVelocity": {field: "soundVelocity", title: "Sound Velocity", units: "m/s"}
+  };
+  var features = {};
+  var stockcharts = [];
+  for(var i=0;i<options.features.length;i++){
+    features[options.features[i]] = true;
+    var wanted = stockfeatures[options.features[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
+  if(!features.latest){
+    for(var i=0;i<stockcharts.length;i++){
+      stockcharts[i].show_reading = false;
+    }
+  }
+  return new mi_charts_widget(elid,{
                 namespace: "spiddal-ctd",
                 title: "CTD Readings (-20m)",
                 model: model(),
-                stockcharts: [
-                    {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
-                    {field: "pressure", title:"Pressure", units: "dbar"},
-                    {field: "conductivity", title:"Conductivity", units: "mS/cm" },
-                    {field: "soundVelocity", title: "Sound Velocity", units: "m/s"}
-                ],
-                onModelReady: onModelReady,
+                stockcharts: stockcharts,
+                onModelReady: options.onModelReady,
+                latest: features.latest?true:false,
                 preload: {
                     url: '//spiddal.marine.ie/data/spiddal-ctd-sample.json',
                     source: "data",
