@@ -132,7 +132,7 @@ mi_chart_widget.prototype = {
         el = document.getElementById(this.elid.substring(1));
       }
       if(el){
-        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest == false?false:true);
+        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest === false?false:true);
       }else{
         console.log("could not find element ["+this.elid+"] for "+this.namespace+" widget");
         return;

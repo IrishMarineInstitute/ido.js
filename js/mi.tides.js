@@ -14,7 +14,7 @@ exports.malinhead = { widget: tides.widget.bind(this,"Malin Head")};
 exports.meta = {
   name: "Tides",
   description: 'Recorded data from the Irish Tides Network',
-  features: ["latest","height"],
+  components: ["latest","height"],
   locations: [
     locations.aranmore,
     locations.ballycotton,

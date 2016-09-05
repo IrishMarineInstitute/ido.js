@@ -24,6 +24,18 @@ var model = function(){
 
 var widget = function(station,elid,options){
   options = options || {};
+  options.components = options.components || ["latest","height"];
+  var stockcomponents = {
+    "height": {field: "height", title: "Tide Height", units: "m"}
+  }
+  var custom = [];
+  var stockcharts = []
+  var components = {};
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -34,9 +46,8 @@ var widget = function(station,elid,options){
                 namespace: "tide-gauge-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Gauge",
                 model: model(),
-                stockcharts: [
-                    {field: "height", title: "Tide Height", units: "m"}
-                ],
+                stockcharts: stockcharts,
+                latest: components.latest?true:false,
                 onModelReady: options.onModelReady,
                 preload: {
                     url: url,

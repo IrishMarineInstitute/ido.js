@@ -62,9 +62,50 @@ var model = function(){
       }
   };
 }
-
+var get_custom_latest = function(){
+  return {
+                      field: "tide",
+                      on: function(el,tide){
+                        var tableid = el.id+"-hightides";
+                        var eltable = document.getElementById(tableid);
+                        if(eltable == null){
+                          el.insertAdjacentHTML('beforeend','<table class="table table-condensed table-striped" id="'+tableid+'"></table>');
+                          eltable = document.getElementById(tableid);
+                        }
+                        var td = new Date(tide.timestamp).toUTCString();
+                        var date = td.substring(0,11);
+                        var time = td.substring(17,22);
+                        var date_changed = tide.timestamp?new Date(tide.timestamp).toUTCString().substring(0,11) != date : true;
+                        var html = [];
+                        html.push("<tr><td>")
+                        if(date_changed){
+                          html.push(date);
+                        }
+                        html.push("</td><td>"+time+"</td><td>"+tide.tide+"</td><td>"+tide.waterLevel+" m</td></tr>");
+                        eltable.insertAdjacentHTML('beforeend',html.join(""));
+                      }
+                    };
+}
 var widget = function(station,elid,options){
   options = options || {};
+  options.components = options.components || ["latest","height"];
+  var stockcomponents = {
+    "height": {field: "waterLevel", title: "Tide Height", units: "m", show_reading: false}
+  }
+  var customcomponents = {
+    "latest": get_custom_latest()
+  }
+  var custom = [];
+  var stockcharts = [];
+  var components = {};
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+    wanted = customcomponents[options.components[i]];
+    if(wanted) custom.push(wanted);
+  }
+
   var d = new Date();
   d.setDate(d.getDate());
   var start_date = d.toISOString();
@@ -75,33 +116,9 @@ var widget = function(station,elid,options){
                 namespace: "tide-forecast-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Forecast",
                 model: model(),
-                stockcharts: [
-                    {field: "waterLevel", title: "Tide Height", units: "m", show_reading: false}
-                ],
-                custom: [
-                  {
-                    field: "tide",
-                    on: function(el,tide){
-                      var tableid = el.id+"-hightides";
-                      var eltable = document.getElementById(tableid);
-                      if(eltable == null){
-                        el.insertAdjacentHTML('beforeend','<table class="table table-condensed table-striped" id="'+tableid+'"></table>');
-                        eltable = document.getElementById(tableid);
-                      }
-                      var td = new Date(tide.timestamp).toUTCString();
-                      var date = td.substring(0,11);
-                      var time = td.substring(17,22);
-                      var date_changed = tide.timestamp?new Date(tide.timestamp).toUTCString().substring(0,11) != date : true;
-                      var html = [];
-                      html.push("<tr><td>")
-                      if(date_changed){
-                        html.push(date);
-                      }
-                      html.push("</td><td>"+time+"</td><td>"+tide.tide+"</td><td>"+tide.waterLevel+" m</td></tr>");
-                      eltable.insertAdjacentHTML('beforeend',html.join(""));
-                    }
-                  }
-                ],
+                stockcharts: stockcharts,
+                custom: custom,
+                latest: components.latest?true:false,
                 onModelReady: options.onModelReady,
                 preload: {
                     url: url,

@@ -36,16 +36,33 @@ var model = function(){
   };
 }
 
-var widget = function(elid,onModelReady){
-    return new mi_charts_widget(elid,{
+var widget = function(elid,options){
+  options = options || {};
+  options.components = options.components || ["latest","chlorophyll","turbidity"];
+  var stockcomponents = {
+    "chlorophyll": {field: "chlorophyll", title: "Chlorophyll", units: "ug/l"},
+    "turbidity": {field: "turbidity", title:"Turbidity", units: "NTU"}
+  };
+  var components = {};
+  var stockcharts = [];
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
+  if(!components.latest){
+    for(var i=0;i<stockcharts.length;i++){
+      stockcharts[i].show_reading = false;
+    }
+  }
+
+  return new mi_charts_widget(elid,{
                 namespace: "spiddal-fluorometer",
                 title: "Fluorometer (-20m)",
                 model: model(),
-                stockcharts: [
-                    {field: "chlorophyll", title: "Chlorophyll", units: "ug/l"},
-                    {field: "turbidity", title:"Turbidity", units: "NTU"}
-                ],
-                onModelReady: onModelReady,
+                stockcharts: stockcharts,
+                latest: components.latest?true:false,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: '//spiddal.marine.ie/data/spiddal-fluorometer-sample.json',
                     source: "data",

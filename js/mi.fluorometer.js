@@ -10,7 +10,7 @@ exports.meta = {
     and it measures turbidity, or the "cloudiness" of the seawater, \
     caused by the presence of particles such as sediment from \
     the seabed suspended in the water.',
-    features: ["latest","chlorophyll","turbidity"],
+    components: ["latest","chlorophyll","turbidity"],
   locations: [
     locations.galwaybay
   ]

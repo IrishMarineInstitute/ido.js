@@ -46,6 +46,19 @@ var model = function(station){
 
 var widget = function(station,elid,options){
   options = options || {};
+  options.components = options.components || ["latest","temperature","height"];
+  var stockcomponents = {
+    "temperature": {field: "temperature", title: "Surface Sea Temp", units: "&deg;C"},
+    "height": {field: "significantWaveHeight", title: "Sig. Wave Height", units: "m"},
+  }
+  var custom = [];
+  var stockcharts = [];
+  var components = {};
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -56,11 +69,9 @@ var widget = function(station,elid,options){
                 namespace: "wave-buoy-"+station.replace(/[\s+_]/g, '-').toLowerCase(),
                 title: "Wave Buoy",
                 model: model(station),
-                stockcharts: [
-                    {field: "temperature", title: "Surface Sea Temp", units: "&deg;C"},
-                    {field: "significantWaveHeight", title: "Sig. Wave Height", units: "m"},
-                ],
-                onModelReady: onModelReady,
+                stockcharts: stockcharts,
+                latest: components.latest?true:false,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: url,
                     source: "table.rows",

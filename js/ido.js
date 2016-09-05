@@ -37,9 +37,9 @@ var documentation = function(ido,root){
       "Select a location on the left to view the html and live widget");
       codeContainer.appendChild(code);
       var demoContainer = createElement("div",["row"]);
-      var featureContainer = createElement("div",["col-xs-3"]);
+      var componentContainer = createElement("div",["col-xs-3"]);
       demoContainer.appendChild(demo);
-      demoContainer.appendChild(featureContainer);
+      demoContainer.appendChild(componentContainer);
       for(var i=0;i<service.meta.locations.length;i++){
         var location = service.meta.locations[i];
         var li = createElement("li",[]);
@@ -51,23 +51,23 @@ var documentation = function(ido,root){
             fc.loader = fn;
           }
           var options = {};
-          var featureEls = fc.getElementsByClassName("feature");
-          var features = [];
-          for(var i=0;i<featureEls.length;i++){
-            featureEls[i].disabled = false;
-            if(featureEls[i].checked){
-              features.push(featureEls[i].getAttribute("name"));
+          var componentEls = fc.getElementsByClassName("component");
+          var components = [];
+          for(var i=0;i<componentEls.length;i++){
+            componentEls[i].disabled = false;
+            if(componentEls[i].checked){
+              components.push(componentEls[i].getAttribute("name"));
             }
           }
-          var featuresCode = "";
-          if(features.length && features.length<featureEls.length){
-            featuresCode = " data-features='"+features.join(",")+"'";
-            options.features = features;
+          var componentsCode = "";
+          if(components.length && components.length<componentEls.length){
+            componentsCode = "\n     data-components='"+components.join(",")+"'";
+            options.components = components;
           }
           code.innerHTML = "&lt;script src='ido.js'&gt;&lt;/script&gt;";
-          code.innerText += "\n<div class='ido-widget' data-widget='"+key+"'"+featuresCode+"></div>";
+          code.innerText += "\n<div class='ido-widget'\n     data-widget='"+key+"'"+componentsCode+"></div>";
           service.widget("#"+demo.id,options);
-        }.bind(this,prefix+'.'+location.key,service[location.key],demo,code,featureContainer);
+        }.bind(this,prefix+'.'+location.key,service[location.key],demo,code,componentContainer);
 
         link.addEventListener("click", cb.bind(this,cb));
         li.appendChild(link);
@@ -75,23 +75,23 @@ var documentation = function(ido,root){
       }
       div2.appendChild(ul);
       div.appendChild(div2);
-      if(service.meta.features){
-        var features = service.meta.features;
-        for(var i=0;i<features.length;i++){
-          var featureDiv = createElement('div',["checkbox"]);
+      if(service.meta.components){
+        var components = service.meta.components;
+        for(var i=0;i<components.length;i++){
+          var componentDiv = createElement('div',["checkbox"]);
           var label = createElement("label");
-          var checkbox = createElement("input",["feature"]);
+          var checkbox = createElement("input",["component"]);
           checkbox.setAttribute("type","checkbox");
-          checkbox.setAttribute("name",features[i]);
+          checkbox.setAttribute("name",components[i]);
           checkbox.checked = true;
           checkbox.disabled = true;
           checkbox.onchange = function(fc){
             fc.loader();
-          }.bind(this,featureContainer);
+          }.bind(this,componentContainer);
           label.appendChild(checkbox);
-          label.appendChild(document.createTextNode(features[i]));
-          featureDiv.appendChild(label);
-          featureContainer.appendChild(featureDiv);
+          label.appendChild(document.createTextNode(components[i]));
+          componentDiv.appendChild(label);
+          componentContainer.appendChild(componentDiv);
         }
       }
       var div3 = createElement("div",["col-xs-7"]);

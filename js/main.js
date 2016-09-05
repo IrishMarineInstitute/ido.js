@@ -29,13 +29,13 @@ docReady( function() {
         }
       }
       var options = {};
-      if(el.hasAttribute("data-features")){
-        var features = (""+el.getAttribute("data-features")).split(",");
-        for(var k=0;k<features.length;k++){
-          features[k] = features[k].trim();
+      if(el.hasAttribute("data-components")){
+        var components = (""+el.getAttribute("data-components")).split(",");
+        for(var k=0;k<components.length;k++){
+          components[k] = components[k].trim();
         }
-        if(features.length){
-          options.features = features;
+        if(components.length){
+          options.components = components;
         }
       }
       if(path && path.widget){

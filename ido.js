@@ -7228,9 +7228,9 @@ var documentation = function(ido,root){
       "Select a location on the left to view the html and live widget");
       codeContainer.appendChild(code);
       var demoContainer = createElement("div",["row"]);
-      var featureContainer = createElement("div",["col-xs-3"]);
+      var componentContainer = createElement("div",["col-xs-3"]);
       demoContainer.appendChild(demo);
-      demoContainer.appendChild(featureContainer);
+      demoContainer.appendChild(componentContainer);
       for(var i=0;i<service.meta.locations.length;i++){
         var location = service.meta.locations[i];
         var li = createElement("li",[]);
@@ -7242,23 +7242,23 @@ var documentation = function(ido,root){
             fc.loader = fn;
           }
           var options = {};
-          var featureEls = fc.getElementsByClassName("feature");
-          var features = [];
-          for(var i=0;i<featureEls.length;i++){
-            featureEls[i].disabled = false;
-            if(featureEls[i].checked){
-              features.push(featureEls[i].getAttribute("name"));
+          var componentEls = fc.getElementsByClassName("component");
+          var components = [];
+          for(var i=0;i<componentEls.length;i++){
+            componentEls[i].disabled = false;
+            if(componentEls[i].checked){
+              components.push(componentEls[i].getAttribute("name"));
             }
           }
-          var featuresCode = "";
-          if(features.length && features.length<featureEls.length){
-            featuresCode = " data-features='"+features.join(",")+"'";
-            options.features = features;
+          var componentsCode = "";
+          if(components.length && components.length<componentEls.length){
+            componentsCode = "\n     data-components='"+components.join(",")+"'";
+            options.components = components;
           }
           code.innerHTML = "&lt;script src='ido.js'&gt;&lt;/script&gt;";
-          code.innerText += "\n<div class='ido-widget' data-widget='"+key+"'"+featuresCode+"></div>";
+          code.innerText += "\n<div class='ido-widget'\n     data-widget='"+key+"'"+componentsCode+"></div>";
           service.widget("#"+demo.id,options);
-        }.bind(this,prefix+'.'+location.key,service[location.key],demo,code,featureContainer);
+        }.bind(this,prefix+'.'+location.key,service[location.key],demo,code,componentContainer);
 
         link.addEventListener("click", cb.bind(this,cb));
         li.appendChild(link);
@@ -7266,23 +7266,23 @@ var documentation = function(ido,root){
       }
       div2.appendChild(ul);
       div.appendChild(div2);
-      if(service.meta.features){
-        var features = service.meta.features;
-        for(var i=0;i<features.length;i++){
-          var featureDiv = createElement('div',["checkbox"]);
+      if(service.meta.components){
+        var components = service.meta.components;
+        for(var i=0;i<components.length;i++){
+          var componentDiv = createElement('div',["checkbox"]);
           var label = createElement("label");
-          var checkbox = createElement("input",["feature"]);
+          var checkbox = createElement("input",["component"]);
           checkbox.setAttribute("type","checkbox");
-          checkbox.setAttribute("name",features[i]);
+          checkbox.setAttribute("name",components[i]);
           checkbox.checked = true;
           checkbox.disabled = true;
           checkbox.onchange = function(fc){
             fc.loader();
-          }.bind(this,featureContainer);
+          }.bind(this,componentContainer);
           label.appendChild(checkbox);
-          label.appendChild(document.createTextNode(features[i]));
-          featureDiv.appendChild(label);
-          featureContainer.appendChild(featureDiv);
+          label.appendChild(document.createTextNode(components[i]));
+          componentDiv.appendChild(label);
+          componentContainer.appendChild(componentDiv);
         }
       }
       var div3 = createElement("div",["col-xs-7"]);
@@ -7388,13 +7388,13 @@ docReady( function() {
         }
       }
       var options = {};
-      if(el.hasAttribute("data-features")){
-        var features = (""+el.getAttribute("data-features")).split(",");
-        for(var k=0;k<features.length;k++){
-          features[k] = features[k].trim();
+      if(el.hasAttribute("data-components")){
+        var components = (""+el.getAttribute("data-components")).split(",");
+        for(var k=0;k<components.length;k++){
+          components[k] = components[k].trim();
         }
-        if(features.length){
-          options.features = features;
+        if(components.length){
+          options.components = components;
         }
       }
       if(path && path.widget){
@@ -7691,7 +7691,7 @@ mi_chart_widget.prototype = {
         el = document.getElementById(this.elid.substring(1));
       }
       if(el){
-        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest == false?false:true);
+        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest === false?false:true);
       }else{
         console.log("could not find element ["+this.elid+"] for "+this.namespace+" widget");
         return;
@@ -7821,21 +7821,21 @@ var model = function(){
 }
 var widget = function(elid,options){
   options = options || {};
-  options.features = options.features || ["latest","temperature","pressure","conductivity","soundVelocity"];
-  var stockfeatures = {
+  options.components = options.components || ["latest","temperature","pressure","conductivity","soundVelocity"];
+  var stockcomponents = {
     "temperature": {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
     "pressure": {field: "pressure", title:"Pressure", units: "dbar"},
     "conductivity": {field: "conductivity", title:"Conductivity", units: "mS/cm" },
     "soundVelocity": {field: "soundVelocity", title: "Sound Velocity", units: "m/s"}
   };
-  var features = {};
+  var components = {};
   var stockcharts = [];
-  for(var i=0;i<options.features.length;i++){
-    features[options.features[i]] = true;
-    var wanted = stockfeatures[options.features[i]];
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
     if(wanted) stockcharts.push(wanted);
   }
-  if(!features.latest){
+  if(!components.latest){
     for(var i=0;i<stockcharts.length;i++){
       stockcharts[i].show_reading = false;
     }
@@ -7846,7 +7846,7 @@ var widget = function(elid,options){
                 model: model(),
                 stockcharts: stockcharts,
                 onModelReady: options.onModelReady,
-                latest: features.latest?true:false,
+                latest: components.latest?true:false,
                 preload: {
                     url: '//spiddal.marine.ie/data/spiddal-ctd-sample.json',
                     source: "data",
@@ -7901,16 +7901,33 @@ var model = function(){
   };
 }
 
-var widget = function(elid,onModelReady){
-    return new mi_charts_widget(elid,{
+var widget = function(elid,options){
+  options = options || {};
+  options.components = options.components || ["latest","chlorophyll","turbidity"];
+  var stockcomponents = {
+    "chlorophyll": {field: "chlorophyll", title: "Chlorophyll", units: "ug/l"},
+    "turbidity": {field: "turbidity", title:"Turbidity", units: "NTU"}
+  };
+  var components = {};
+  var stockcharts = [];
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
+  if(!components.latest){
+    for(var i=0;i<stockcharts.length;i++){
+      stockcharts[i].show_reading = false;
+    }
+  }
+
+  return new mi_charts_widget(elid,{
                 namespace: "spiddal-fluorometer",
                 title: "Fluorometer (-20m)",
                 model: model(),
-                stockcharts: [
-                    {field: "chlorophyll", title: "Chlorophyll", units: "ug/l"},
-                    {field: "turbidity", title:"Turbidity", units: "NTU"}
-                ],
-                onModelReady: onModelReady,
+                stockcharts: stockcharts,
+                latest: components.latest?true:false,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: '//spiddal.marine.ie/data/spiddal-fluorometer-sample.json',
                     source: "data",
@@ -7990,9 +8007,50 @@ var model = function(){
       }
   };
 }
-
+var get_custom_latest = function(){
+  return {
+                      field: "tide",
+                      on: function(el,tide){
+                        var tableid = el.id+"-hightides";
+                        var eltable = document.getElementById(tableid);
+                        if(eltable == null){
+                          el.insertAdjacentHTML('beforeend','<table class="table table-condensed table-striped" id="'+tableid+'"></table>');
+                          eltable = document.getElementById(tableid);
+                        }
+                        var td = new Date(tide.timestamp).toUTCString();
+                        var date = td.substring(0,11);
+                        var time = td.substring(17,22);
+                        var date_changed = tide.timestamp?new Date(tide.timestamp).toUTCString().substring(0,11) != date : true;
+                        var html = [];
+                        html.push("<tr><td>")
+                        if(date_changed){
+                          html.push(date);
+                        }
+                        html.push("</td><td>"+time+"</td><td>"+tide.tide+"</td><td>"+tide.waterLevel+" m</td></tr>");
+                        eltable.insertAdjacentHTML('beforeend',html.join(""));
+                      }
+                    };
+}
 var widget = function(station,elid,options){
   options = options || {};
+  options.components = options.components || ["latest","height"];
+  var stockcomponents = {
+    "height": {field: "waterLevel", title: "Tide Height", units: "m", show_reading: false}
+  }
+  var customcomponents = {
+    "latest": get_custom_latest()
+  }
+  var custom = [];
+  var stockcharts = [];
+  var components = {};
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+    wanted = customcomponents[options.components[i]];
+    if(wanted) custom.push(wanted);
+  }
+
   var d = new Date();
   d.setDate(d.getDate());
   var start_date = d.toISOString();
@@ -8003,33 +8061,9 @@ var widget = function(station,elid,options){
                 namespace: "tide-forecast-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Forecast",
                 model: model(),
-                stockcharts: [
-                    {field: "waterLevel", title: "Tide Height", units: "m", show_reading: false}
-                ],
-                custom: [
-                  {
-                    field: "tide",
-                    on: function(el,tide){
-                      var tableid = el.id+"-hightides";
-                      var eltable = document.getElementById(tableid);
-                      if(eltable == null){
-                        el.insertAdjacentHTML('beforeend','<table class="table table-condensed table-striped" id="'+tableid+'"></table>');
-                        eltable = document.getElementById(tableid);
-                      }
-                      var td = new Date(tide.timestamp).toUTCString();
-                      var date = td.substring(0,11);
-                      var time = td.substring(17,22);
-                      var date_changed = tide.timestamp?new Date(tide.timestamp).toUTCString().substring(0,11) != date : true;
-                      var html = [];
-                      html.push("<tr><td>")
-                      if(date_changed){
-                        html.push(date);
-                      }
-                      html.push("</td><td>"+time+"</td><td>"+tide.tide+"</td><td>"+tide.waterLevel+" m</td></tr>");
-                      eltable.insertAdjacentHTML('beforeend',html.join(""));
-                    }
-                  }
-                ],
+                stockcharts: stockcharts,
+                custom: custom,
+                latest: components.latest?true:false,
                 onModelReady: options.onModelReady,
                 preload: {
                     url: url,
@@ -8068,6 +8102,18 @@ var model = function(){
 
 var widget = function(station,elid,options){
   options = options || {};
+  options.components = options.components || ["latest","height"];
+  var stockcomponents = {
+    "height": {field: "height", title: "Tide Height", units: "m"}
+  }
+  var custom = [];
+  var stockcharts = []
+  var components = {};
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -8078,9 +8124,8 @@ var widget = function(station,elid,options){
                 namespace: "tide-gauge-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
                 title: "Tide Gauge",
                 model: model(),
-                stockcharts: [
-                    {field: "height", title: "Tide Height", units: "m"}
-                ],
+                stockcharts: stockcharts,
+                latest: components.latest?true:false,
                 onModelReady: options.onModelReady,
                 preload: {
                     url: url,
@@ -8141,6 +8186,19 @@ var model = function(station){
 
 var widget = function(station,elid,options){
   options = options || {};
+  options.components = options.components || ["latest","temperature","height"];
+  var stockcomponents = {
+    "temperature": {field: "temperature", title: "Surface Sea Temp", units: "&deg;C"},
+    "height": {field: "significantWaveHeight", title: "Sig. Wave Height", units: "m"},
+  }
+  var custom = [];
+  var stockcharts = [];
+  var components = {};
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
+    if(wanted) stockcharts.push(wanted);
+  }
   var d = new Date();
   d.setDate(d.getDate() - 2);
   var start_date = d.toISOString();
@@ -8151,11 +8209,9 @@ var widget = function(station,elid,options){
                 namespace: "wave-buoy-"+station.replace(/[\s+_]/g, '-').toLowerCase(),
                 title: "Wave Buoy",
                 model: model(station),
-                stockcharts: [
-                    {field: "temperature", title: "Surface Sea Temp", units: "&deg;C"},
-                    {field: "significantWaveHeight", title: "Sig. Wave Height", units: "m"},
-                ],
-                onModelReady: onModelReady,
+                stockcharts: stockcharts,
+                latest: components.latest?true:false,
+                onModelReady: options.onModelReady,
                 preload: {
                     url: url,
                     source: "table.rows",
@@ -8183,7 +8239,7 @@ exports.meta = {
   exert by the seawater above (from which the depth of the sensor is \
   estimated); and these parameters are also used to estimate the \
   speed of sound within the sea.',
-  features: ["latest","temperature","pressure","conductivity","soundVelocity"],
+  components: ["latest","temperature","pressure","conductivity","soundVelocity"],
   locations: [
     locations.galwaybay
   ]
@@ -8202,7 +8258,7 @@ exports.meta = {
     and it measures turbidity, or the "cloudiness" of the seawater, \
     caused by the presence of particles such as sediment from \
     the seabed suspended in the water.',
-    features: ["latest","chlorophyll","turbidity"],
+    components: ["latest","chlorophyll","turbidity"],
   locations: [
     locations.galwaybay
   ]
@@ -8285,7 +8341,7 @@ exports.malinhead = { widget: tides.widget.bind(this,"Malin Head")};
 exports.meta = {
   name: "Tides",
   description: 'Recorded data from the Irish Tides Network',
-  features: ["latest","height"],
+  components: ["latest","height"],
   locations: [
     locations.aranmore,
     locations.ballycotton,
@@ -8324,7 +8380,7 @@ exports.wexford = {widget: forecast.widget.bind(this,"Wexford")};
 exports.meta = {
   name: "Tides Forecast",
   description: 'Irish Tides Forecast',
-  features: ["latest","height"],
+  components: ["latest","height"],
   locations: [
     locations.aranmore,
     locations.ballyglass,
@@ -8356,7 +8412,7 @@ exports.westwavemk3 = { widget:waves.widget.bind(this,"Westwave MK3")};
 exports.meta = {
   name: "Waves",
   description: 'Data from the Irish Waves Buoy Network',
-  features: ["latest","temperature","height"],
+  components: ["latest","temperature","height"],
   locations: [
     locations.belmulletbertha,
     locations.belmulletberthb,

@@ -43,21 +43,21 @@ var model = function(){
 }
 var widget = function(elid,options){
   options = options || {};
-  options.features = options.features || ["latest","temperature","pressure","conductivity","soundVelocity"];
-  var stockfeatures = {
+  options.components = options.components || ["latest","temperature","pressure","conductivity","soundVelocity"];
+  var stockcomponents = {
     "temperature": {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
     "pressure": {field: "pressure", title:"Pressure", units: "dbar"},
     "conductivity": {field: "conductivity", title:"Conductivity", units: "mS/cm" },
     "soundVelocity": {field: "soundVelocity", title: "Sound Velocity", units: "m/s"}
   };
-  var features = {};
+  var components = {};
   var stockcharts = [];
-  for(var i=0;i<options.features.length;i++){
-    features[options.features[i]] = true;
-    var wanted = stockfeatures[options.features[i]];
+  for(var i=0;i<options.components.length;i++){
+    components[options.components[i]] = true;
+    var wanted = stockcomponents[options.components[i]];
     if(wanted) stockcharts.push(wanted);
   }
-  if(!features.latest){
+  if(!components.latest){
     for(var i=0;i<stockcharts.length;i++){
       stockcharts[i].show_reading = false;
     }
@@ -68,7 +68,7 @@ var widget = function(elid,options){
                 model: model(),
                 stockcharts: stockcharts,
                 onModelReady: options.onModelReady,
-                latest: features.latest?true:false,
+                latest: components.latest?true:false,
                 preload: {
                     url: '//spiddal.marine.ie/data/spiddal-ctd-sample.json',
                     source: "data",

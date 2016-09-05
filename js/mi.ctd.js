@@ -10,7 +10,7 @@ exports.meta = {
   exert by the seawater above (from which the depth of the sensor is \
   estimated); and these parameters are also used to estimate the \
   speed of sound within the sea.',
-  features: ["latest","temperature","pressure","conductivity","soundVelocity"],
+  components: ["latest","temperature","pressure","conductivity","soundVelocity"],
   locations: [
     locations.galwaybay
   ]
