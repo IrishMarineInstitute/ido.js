@@ -1,5 +1,5 @@
 'use strict';
-var mi_charts_widget = require('./mi-chart-widget');
+var mi_charts_widget = require('../mi-chart-widget');
 var model = function(){
     return {
       row: null,

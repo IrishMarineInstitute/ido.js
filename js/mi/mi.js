@@ -1,6 +1,6 @@
 'use strict';
 var mqtt = require('mqtt');
-var mqtt_feed = require('./mqtt-feed');
+var mqtt_feed = require('../mqtt-feed');
 var mi = {};
 try{
   mi.mqtt = new mqtt_feed.wrap(mqtt.connect("wss://mqtt.marine.ie"));
