@@ -88,12 +88,12 @@ var get_custom_latest = function(){
 }
 var widget = function(station,elid,options){
   options = options || {};
-  options.components = options.components || ["latest","height"];
+  options.components = options.components || ["latest","height","tides"];
   var stockcomponents = {
     "height": {field: "waterLevel", title: "Tide Height", units: "m", show_reading: false}
   }
   var customcomponents = {
-    "latest": get_custom_latest()
+    "tides": get_custom_latest()
   }
   var custom = [];
   var stockcharts = [];
