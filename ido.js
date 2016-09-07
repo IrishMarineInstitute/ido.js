@@ -7352,26 +7352,8 @@ module.exports = Exceliot;
 },{}],38:[function(require,module,exports){
 'use strict';
 var uidocs = require('./docs-widget.js');
-exports.mi = require('./mi/mi.js'),
-exports.meta = {
-  name: "Irish Digital Ocean API",
-  description: "A collection of services for displaying live and \
-  archived data about Ireland's Marine Environment",
-  providers: ["mi"]
-}
-exports.documentation = uidocs.documentation;
-
-},{"./docs-widget.js":36,"./mi/mi.js":49}],39:[function(require,module,exports){
-'use strict';
-var css = require('../css/main.css');
-var ido = require('./ido.js');
-
-
-
-
-var docReady = require('doc-ready');
-// find and load widgets on page.
-docReady( function() {
+var applyWidgets = function() {
+  console.log("ido.applyingWidgets");
   var pre = "_"+(new Date()).getTime()+"_";
   var n = 0;
   var elements = document.getElementsByClassName("ido-widget");
@@ -7409,7 +7391,29 @@ docReady( function() {
       }
     }
   }
-});
+};
+var docReady = require('doc-ready')
+exports.mi = require('./mi/mi.js'),
+exports.meta = {
+  name: "Irish Digital Ocean API",
+  description: "A collection of services for displaying live and \
+  archived data about Ireland's Marine Environment",
+  providers: ["mi"]
+}
+exports.documentation = uidocs.documentation;
+
+exports.applyWidgets = function(){
+  docReady(applyWidgets);
+};
+
+},{"./docs-widget.js":36,"./mi/mi.js":49,"doc-ready":56}],39:[function(require,module,exports){
+'use strict';
+var css = require('../css/main.css');
+var ido = require('./ido.js');
+
+var docReady = require('doc-ready');
+// find and load widgets on page.
+docReady(ido.applyWidgets);
 window.ido = ido;
 
 },{"../css/main.css":35,"./ido.js":38,"doc-ready":56}],40:[function(require,module,exports){
