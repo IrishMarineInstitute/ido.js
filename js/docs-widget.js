@@ -130,6 +130,81 @@ var documentation = function(ido,root){
       }
       return el;
     };
+    var getCustomWidgetDocs = function(){
+      var examples = [
+        {
+          name: "Simple",
+          description: ["A simple example of a custom widget which combines all the data for a specific location.",
+           "This widget combines all the data for 'galwayport' location,"],
+          code: "galwayport"
+        },
+        {
+         name: "No titles",
+         description: ["A small widget showing selected a single location, without titles.",
+       "This widget shows the tides and tidesforecast for galwayport."],
+         code: "galwayport[tides(height),tidesforecast(height)]"
+       },
+
+        {
+         name: "Intermediate",
+         description: ["A small widget showing selected data from two locations.",
+       "This widget combines data from galwaybay and galwayport locations.",
+       "From galwaybay location we include the ctd, with location and temperature components.",
+       "From galwayport we include waves widget, with temperature component."],
+         code: "galwaybay[ctd(location,temperature)],galwayport[waves(temperature)]"
+       },
+        {
+         name: "Advanced",
+         description: ["This advanced example shows multiple widgets from two locations combined."],
+         code: "galwaybay[ctd(location,temperature),fluorometer(turbidity)],galwayport[waves(temperature,height),tides(height),tidesforecast(height)]"
+       }
+      ];
+      var container = createElement("div",["container"]);
+      var link = createElement("a");
+      link.setAttribute("name","customwidget");
+      container.appendChild(link);
+      container.appendChild(createElement("h2",[],"Custom Widgets"));
+      container.appendChild(createElement("p",[],"Custom widgets provide a way to combine selected data from one or more providers."
+    + " This can be useful to create a consolidated view about a particular location."));
+      var el = createElement("div",["row"]);
+      container.appendChild(el);
+      var colLeft = createElement("div",["col-xs-5"]);
+      colLeft.appendChild(createElement("p",[],"Examples:"));
+      var ul = createElement("ul");
+      var colRight = createElement("div",["col-xs-7"]);
+      el.appendChild(colLeft);
+      el.appendChild(colRight);
+      var codeContainer = createElement("div",["well"]);
+      var code = createElement("code",[],
+      "Select an example on the left to view the html and live widget");
+      var live = createElement("div");
+      colLeft.appendChild(ul);
+      var docs = createElement("div");
+      colLeft.appendChild(docs);
+      codeContainer.appendChild(code);
+      colRight.appendChild(codeContainer);
+      colRight.appendChild(live);
+      var cb = function(example,codebox,livebox,docs){
+        var code = "<div class='ido-widget' data-widget='custom'\n";
+        code += "  data-components='"+example.code+"'></div>";
+        docs.innerHTML="";
+        docs.appendChild(createElement("h3",[],example.name));
+        for(var i=0;i<example.description.length;i++){
+          docs.appendChild(createElement("p",[],example.description[i]));
+        }
+        codebox.innerText = code;
+        livebox.innerHTML = code;
+        ido.applyWidgets(livebox);
+      }
+      for(var i=0;i<examples.length;i++){
+        var li = createElement("li");
+        var a = createElement("a",[],examples[i].name);
+        a.addEventListener("click", cb.bind(this,examples[i],code,live,docs));
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+      return container;
+    }
       var container = createElement("div",["container"]);
       var overview = createElement("div",["page-header"]);
       var a = createElement("a");
@@ -154,6 +229,15 @@ var documentation = function(ido,root){
         el.appendChild(getProvider(provider,key,provider_href));
         container.appendChild(el);
       }
+      var custom = createElement('p');
+      custom.appendChild(document.createTextNode("Data from different providers can be combined into "));
+      var customlink = createElement('a',[],"custom widget");
+      customlink.setAttribute('href','#customwidget');
+      custom.appendChild(customlink);
+      custom.appendChild(document.createTextNode("."));
+
+      overview.appendChild(custom);
+      container.appendChild(getCustomWidgetDocs());
       root.appendChild(container);
 };
 exports.documentation = documentation;

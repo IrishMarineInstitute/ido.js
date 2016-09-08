@@ -15,6 +15,12 @@ var applyWidgets = function(root) {
       if(wanted == "documentation"){
         ido.documentation(ido,el);
         continue;
+      }else if (wanted == "custom") {
+        if(el.hasAttribute("data-components")){
+          el.innerHTML = ido.str2widgetHTML(""+el.getAttribute("data-components"));
+          ido.applyWidgets(el);
+        }
+        continue;
       }
       var parts = wanted.split(/\./);
       var path = window.ido;
