@@ -22,9 +22,9 @@ var model = function(){
   };
 }
 
-var widget = function(station,elid,options){
+var widget = function(location,station,elid,options){
   options = options || {};
-  options.components = options.components || ["latest","height"];
+  options.components = options.components || ["location","title","latest","height"];
   var stockcomponents = {
     "height": {field: "height", title: "Tide Height", units: "m"}
   }
@@ -44,7 +44,8 @@ var widget = function(station,elid,options){
     var url = '//erddap.marine.ie/erddap/tabledap/IrishNationalTideGaugeNetwork.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"';
     return new mi_charts_widget(elid,{
                 namespace: "tide-gauge-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
-                title: "Tide Gauge",
+                title: components.title?"Tide Gauge":false,
+                location: components.location?location:false,
                 model: model(),
                 stockcharts: stockcharts,
                 latest: components.latest?true:false,

@@ -44,9 +44,9 @@ var model = function(station){
   };
 }
 
-var widget = function(station,elid,options){
+var widget = function(location,station,elid,options){
   options = options || {};
-  options.components = options.components || ["latest","temperature","height"];
+  options.components = options.components || ["location","title","latest","temperature","height"];
   var stockcomponents = {
     "temperature": {field: "temperature", title: "Surface Sea Temp", units: "&deg;C"},
     "height": {field: "significantWaveHeight", title: "Sig. Wave Height", units: "m"},
@@ -67,7 +67,8 @@ var widget = function(station,elid,options){
     var url = '//erddap.marine.ie/erddap/tabledap/IWaveBNetwork30Min.json?time,SeaTemperature,SignificantWaveHeight&time>='+start_date+'&time<='+end_date+'&station_id="'+station+'"&SeaTemperature!=0.0000&PeakPeriod>=0';
     return new mi_charts_widget(elid,{
                 namespace: "wave-buoy-"+station.replace(/[\s+_]/g, '-').toLowerCase(),
-                title: "Wave Buoy",
+                title: components.title?"Wave Buoy":false,
+                location: components.location?location:false,
                 model: model(station),
                 stockcharts: stockcharts,
                 latest: components.latest?true:false,

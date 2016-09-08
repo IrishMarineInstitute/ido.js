@@ -11,44 +11,21 @@
 <body class="container">
 <script>
 var idoWidgets = function(){
-      var wanted = false;
-      if(window.location.hash){
-        wanted = window.location.hash.substring(1);
-      }
       var html = [];
-      var all_locations = [];
-      for(var p=0;p<ido.meta.providers.length;p++){
-        var provider = ido[ido.meta.providers[p]];
-        for(var t=0;t<provider.meta.types.length;t++){
-          var type = provider[provider.meta.types[t]];
-          for(var l=0;l<type.meta.locations.length;l++){
-            all_locations.push(type.meta.locations[l]);
-            if(type.meta.locations[l].key == wanted){
-              if(html.length == 0){
-                var x = document.createElement("div");
-                var h3 = document.createElement("h3");
-                h3.innerText = type.meta.locations[l].name;
-                x.appendChild(h3);
-                html.push(x.innerHTML);
-              }
-              var key = ido.meta.providers[p]
-                   +"."+provider.meta.types[t]
-                   +"."+wanted;
-              html.push("<div class='ido-widget' data-widget='"+key+"'></div>");
-            }
-          }
+      var wanted = null;
+      if(window.location.hash){
+        wanted = window.location.hash.substring(1)
+        var widgetHTML = ido.str2widgetHTML(wanted);
+        if(widgetHTML && widgetHTML.length){
+          html.push(widgetHTML);
         }
       }
       if(html.length == 0){
          if(wanted){
            html.push("<p class='lead'>Sorry. No widget available for "+wanted+"</p>");
          }
-         var seen = {};
+         var all_locations = ido.locations();
          for(var i=0;i<all_locations.length;i++){
-           if(seen[all_locations[i].key]){
-             continue;
-           }
-           seen[all_locations[i].key] = true;
            var x = document.createElement("div");
            var a = document.createElement("a");
            a.innerText = all_locations[i].name;

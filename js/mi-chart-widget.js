@@ -1,8 +1,10 @@
 'use strict';
 var Highcharts = require('highcharts/highstock');
 var Exceliot = require("./exceliot");
+if( typeof window !== 'undefined' ){
 var chartoptions = require('./mi-chart-options');
-chartoptions.configure(Highcharts);
+  chartoptions.configure(Highcharts);
+}
 
 var mi_chart_widget = function(element_id,options){
   this.elid = element_id;
@@ -32,11 +34,13 @@ mi_chart_widget.prototype = {
     var html = [];
     html.push("<div>");
     html.push("<div style='height:40px; position:relative;'>");
-    html.push(" <span style='position:absolute; left: 10px; bottom:0;'>");
-    html.push(" <span style='font-size: 18px; color: #555'>");
-    html.push(title);
-    html.push("</span>");
-    html.push(" </span>");
+    if(title){
+        html.push(" <span style='position:absolute; left: 10px; bottom:0;'>");
+        html.push(" <span style='font-size: 18px; color: #555'>");
+        html.push(title);
+        html.push("</span>");
+        html.push(" </span>");
+    }
     html.push(" <span style='position:absolute; right:10px; bottom:0;'>");
     html.push("   <span id='"+el_id+"_latest' class='chart-latest-value'></span>")
     html.push("   <span class='chart-latest-units'>"+units+"</span>");
@@ -50,16 +54,24 @@ mi_chart_widget.prototype = {
 
     return html.join("");
   },
-  getWidgetContainerHtml: function(namespace,title,latest){
+  getWidgetContainerHtml: function(namespace,location,title,latest){
     var html=[];
     html.push("<div>");
     html.push(" <div class='widget-clean'>");
-    html.push(" <div class='widget-header'>");
-    html.push(" <div class='widget-title'>");
-    html.push(title);
-    html.push(" </div>");
-    html.push(" </div>");
-
+    if(location || (title && title.length)){
+      html.push(" <div class='widget-header'>");
+      if(location){
+        html.push(" <div class='widget-title'>");
+        html.push(location.name);
+        html.push(" </div>");
+      }
+      if(title && title.length){
+        html.push(" <div class='widget-title'>");
+        html.push(title);
+        html.push(" </div>");
+      }
+      html.push(" </div>");
+    }
     html.push(" <div id='"+namespace+"-widget-body' class='widget-body'>");
     if(latest){
       html.push(" <h5 style='text-align: center; margin: 20px;'>");
@@ -132,7 +144,7 @@ mi_chart_widget.prototype = {
         el = document.getElementById(this.elid.substring(1));
       }
       if(el){
-        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.title,this.options.latest === false?false:true);
+        el.innerHTML = this.getWidgetContainerHtml(this.namespace,this.options.location,this.title,this.options.latest === false?false:true);
       }else{
         console.log("could not find element ["+this.elid+"] for "+this.namespace+" widget");
         return;

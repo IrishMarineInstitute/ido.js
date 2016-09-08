@@ -1,7 +1,8 @@
 'use strict';
 
 var locations = require('./mi.locations').locations;
-exports.galwaybay = require('./mi-spiddal-ctd-widget');
+const ctd = require('./mi-spiddal-ctd-widget');
+exports.galwaybay = {widget: ctd.widget.bind(this,locations.galwaybay)};
 exports.meta = {
   name: "Conductivity Temperature Depth Sensor",
   description: 'A Conductivity/Temperature/Depth sensor measures the \
@@ -10,7 +11,7 @@ exports.meta = {
   exert by the seawater above (from which the depth of the sensor is \
   estimated); and these parameters are also used to estimate the \
   speed of sound within the sea.',
-  components: ["latest","temperature","pressure","conductivity","soundVelocity"],
+  components: ["location","title","latest","temperature","pressure","conductivity","soundVelocity"],
   locations: [
     locations.galwaybay
   ]

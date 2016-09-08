@@ -36,9 +36,9 @@ var model = function(){
   };
 }
 
-var widget = function(elid,options){
+var widget = function(location,elid,options){
   options = options || {};
-  options.components = options.components || ["latest","chlorophyll","turbidity"];
+  options.components = options.components || ["location","title","latest","chlorophyll","turbidity"];
   var stockcomponents = {
     "chlorophyll": {field: "chlorophyll", title: "Chlorophyll", units: "ug/l"},
     "turbidity": {field: "turbidity", title:"Turbidity", units: "NTU"}
@@ -58,7 +58,8 @@ var widget = function(elid,options){
 
   return new mi_charts_widget(elid,{
                 namespace: "spiddal-fluorometer",
-                title: "Fluorometer (-20m)",
+                title: components.title?"Fluorometer (-20m)":false,
+                location: components.location?location:false,
                 model: model(),
                 stockcharts: stockcharts,
                 latest: components.latest?true:false,

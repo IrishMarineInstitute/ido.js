@@ -1,8 +1,10 @@
 'use strict';
-var css = require('../css/main.css');
 var ido = require('./ido.js');
 
-var docReady = require('doc-ready');
-// find and load widgets on page.
-docReady(ido.applyWidgets);
-window.ido = ido;
+if(typeof window !== 'undefined'){
+  var css = require('../css/main.css');
+  window.ido = ido;
+  var docReady = require('doc-ready');
+  docReady(ido.applyWidgets);
+}
+exports.ido = ido;

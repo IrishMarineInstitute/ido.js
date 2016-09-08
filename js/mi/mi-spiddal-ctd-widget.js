@@ -41,9 +41,9 @@ var model = function(){
       },
   };
 }
-var widget = function(elid,options){
+var widget = function(location,elid,options){
   options = options || {};
-  options.components = options.components || ["latest","temperature","pressure","conductivity","soundVelocity"];
+  options.components = options.components || ["location","title","latest","temperature","pressure","conductivity","soundVelocity"];
   var stockcomponents = {
     "temperature": {field: "temperature", title: "Subsea Temp", units: "&deg;C"},
     "pressure": {field: "pressure", title:"Pressure", units: "dbar"},
@@ -64,7 +64,8 @@ var widget = function(elid,options){
   }
   return new mi_charts_widget(elid,{
                 namespace: "spiddal-ctd",
-                title: "CTD Readings (-20m)",
+                title: components.title?"CTD Readings (-20m)":false,
+                location: components.location?location:false,
                 model: model(),
                 stockcharts: stockcharts,
                 onModelReady: options.onModelReady,

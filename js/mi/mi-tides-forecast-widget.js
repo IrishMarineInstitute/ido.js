@@ -17,7 +17,7 @@ var model = function(){
           return parsed.timestamp;
       },
       waterLevel: function(parsed){
-        return parsed;
+        return {timestamp:parsed.timestamp, waterLevel: parsed.waterLevel};
       },
       tworeadings: function(_,parsed){
         var current = {
@@ -86,11 +86,11 @@ var get_custom_latest = function(){
                       }
                     };
 }
-var widget = function(station,elid,options){
+var widget = function(location,station,elid,options){
   options = options || {};
-  options.components = options.components || ["latest","height","tides"];
+  options.components = options.components || ["location","title","latest","height","tides"];
   var stockcomponents = {
-    "height": {field: "waterLevel", title: "Tide Height", units: "m", show_reading: false}
+    "height": {field: "waterLevel", title: "Forecast Tide Height", units: "m", show_reading: false}
   }
   var customcomponents = {
     "tides": get_custom_latest()
@@ -114,7 +114,8 @@ var widget = function(station,elid,options){
     var url = '//erddap.marine.ie/erddap/tabledap/IMI-TidePrediction.json?time,Water_Level&time>='+start_date+'&time<='+end_date+'&stationID="'+station+'"';
     return new mi_charts_widget(elid,{
                 namespace: "tide-forecast-"+station.replace(/[\s_]+/g, '-').toLowerCase(),
-                title: "Tide Forecast",
+                title: components.title?"Tide Forecast":false,
+                location: components.location?location:false,
                 model: model(),
                 stockcharts: stockcharts,
                 custom: custom,

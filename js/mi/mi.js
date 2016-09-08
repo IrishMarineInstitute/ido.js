@@ -26,5 +26,6 @@ exports.meta = {
   url: "http://www.marine.ie",
   icon: "http://webapps.marine.ie/virtual_earth_polygon/Images/MISymbol.bmp",
   logo: "http://www.marine.ie/Home/sites/default/files/MIFiles/Images/General/Marine_logo.jpg",
-  types:  [ "ctd","fluorometer","tidesforecast","tides","waves" ]
+  types:  [ "ctd","fluorometer","tidesforecast","tides","waves" ],
+  locations: require("./mi.locations").locations
 }
