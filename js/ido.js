@@ -107,12 +107,15 @@ var providers = [];
 var mi = require('./mi/mi.js');
 providers.push(mi);
 exports.mi = mi
+var cil = require("./cil/cil.js")
+providers.push(cil);
+exports.cil = cil
 
 exports.meta = {
   name: "Irish Digital Ocean API",
   description: "A collection of services for displaying live and \
   archived data about Ireland's Marine Environment",
-  providers: ["mi"]
+  providers: ["mi","cil"]
 };
 exports.documentation = uidocs.documentation;
 

@@ -115,6 +115,9 @@ mi_chart_widget.prototype = {
         model.on(field,function(show_reading,val){
            var shift = chart.series[0].length >= 4000;
            var value = val[field];
+           if(value === undefined){
+             return;
+           }
            chart.series[0].addPoint([val.timestamp,value], true, shift);
            if(show_reading){
              try{
