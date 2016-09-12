@@ -101,11 +101,15 @@ var documentation = function(ido,root){
       return div;
     };
     var getProvider = function(provider,prefix,provider_href){
-      var el = createElement("div",["container"]);
+      var el = createElement("div");
       var link = createElement("a");
       link.setAttribute("name",provider_href);
       el.appendChild(link);
-      el.appendChild(createElement("h2",[],provider.meta.name));
+      var img = createElement("img","img-responsive");
+      img.setAttribute("src",provider.meta.logo);
+      el.setAttribute("alt",provider.meta.name);
+      el.appendChild(img);
+      el.appendChild(createElement("hr"))
       el.appendChild(createElement("p",[],provider.meta.description));
       var p = createElement("p");
       var a = createElement("a",[],"Irish Digital Ocean");

@@ -1,10 +1,10 @@
 'use strict';
-var mi_charts_widget = require('../mi-chart-widget');
+var chart_widget = require('../speed-direction-chart-widget');
 var model = function(){
     return {
       row: null,
       parsed: function(row){
-        row.timestamp = new Date(row.hour);
+        row.timestamp = Date.parse(row.hour);
         return row;
       },
       timestamp: function(parsed){
@@ -56,7 +56,7 @@ var widget = function(location,elid,options){
   d.setDate(d.getDate() - 3);
   var start_date = d.toISOString();
   var url = "//cilpublic.cil.ie/MetOcean/MetOcean.ashx?accesstoken=B9EF21E2-C563-4C07-94E9-198AF132C447&MMSI="+location.mmsi+"&FromDate="+start_date;
-  return new mi_charts_widget(elid,{
+  return new chart_widget(elid,{
                 namespace: "cilmetocean"+location.key,
                 title: components.title?location.type:false,
                 location: components.location?location:false,

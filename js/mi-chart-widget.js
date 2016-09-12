@@ -97,6 +97,9 @@ mi_chart_widget.prototype = {
         var e = document.createElement('div');
         e.innerHTML = params.units;
         var units = e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+
+
+
         var chart = Highcharts.StockChart(Highcharts.merge(Highcharts.theme, {
             yAxis: { title: { text: ' ' }, opposite: false, floor: 0, gridLineWidth: 0, minorGridLineWidth: 0, labels: { enabled: false } },
             series: [{name: displayTitle, data:[]}],
@@ -196,7 +199,9 @@ mi_chart_widget.prototype = {
       var makeChartsVisibleAndCallUserCallback = function(){
              for(var j=0;j<charts.length;j++){
                if(charts[j]){
-                  charts[j].series[0].setVisible(true,true);
+                 for(var n=0;n<charts[j].series.length;n++){
+                   charts[j].series[n].setVisible(true,true);
+                 }
                }
              }
              setTimeout(subscribe_fn,0);

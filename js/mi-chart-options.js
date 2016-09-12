@@ -87,6 +87,7 @@ var configure = function(Highcharts){
             valueDecimals: 2,
             useHTML: true,
             formatter: function() {
+              console.log("here i am");
                 //thursday, oct 21, 21:32 - 21:33
                 var date = Highcharts.dateFormat('%A, %b %e, %H:%M', new Date(this.x));
                 var chart = this.points[0].series.chart; //get the chart object
