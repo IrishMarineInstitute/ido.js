@@ -2,7 +2,7 @@
 var locations = {
 dublinbay: {key: "dublinbay", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501301", name: "Dublin Bay Buoy"},
 fastnet: {key: "fastnet", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501123", name: "Fastnet"},
-coningbeg: {key: "coningbeg", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501074", name: "Coningbeg"},
+coningbeg: {key: "coningbeg", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, gustSpeed: true, windDirection: true, windGustDirection: false}, mmsi: "992501074", name: "Coningbeg"},
 splaugh: {key: "splaugh", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501062", name: "Splaugh"},
 kishbank: {key: "kishbank", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501017", name: "Kish Bank"},
 southhunter: {key: "southhunter", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:false, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992351007", name: "South Hunter"},
