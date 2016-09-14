@@ -58,7 +58,8 @@ var model = function(){
           return _;
         }
         var highlow = tworeadings.previous.tide == "rising"?"High":"Low";
-        return {timestamp: tworeadings.previous.timestamp, waterLevel: tworeadings.previous.waterLevel, tide: highlow};
+        var previousTimestamp = _ ? _.timestamp : false;
+        return {timestamp: tworeadings.previous.timestamp, previousTimestamp: previousTimestamp, waterLevel: tworeadings.previous.waterLevel, tide: highlow};
       }
   };
 }
@@ -75,7 +76,7 @@ var get_custom_latest = function(){
                         var td = new Date(tide.timestamp).toUTCString();
                         var date = td.substring(0,11);
                         var time = td.substring(17,22);
-                        var date_changed = tide.timestamp?new Date(tide.timestamp).toUTCString().substring(0,11) != date : true;
+                        var date_changed = tide.previousTimestamp?new Date(tide.previousTimestamp).toUTCString().substring(0,11) != date : true;
                         var html = [];
                         html.push("<tr><td>")
                         if(date_changed){
