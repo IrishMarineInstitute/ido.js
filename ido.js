@@ -7006,31 +7006,32 @@ var model = function(){
       wavePeriod: function(parsed){
         return {timestamp: parsed.timestamp, wavePeriod: parsed.WavePeriod};
       },
-      gustSpeed: function(parsed){
-        return {timestamp: parsed.timestamp, gustSpeed: parsed.GustSpeed};
-      },
-      averageWindSpeed: function(parsed){
-        return {timestamp: parsed.timestamp, averageWindSpeed: parsed.AverageWindSpeed};
+      windSpeed: function(parsed){
+        return {timestamp: parsed.timestamp, windSpeed: parsed.AverageWindSpeed};
       },
       windDirection: function(parsed){
         return {timestamp: parsed.timestamp, windDirection: parsed.WindDirection};
+      },
+      windGustSpeed: function(parsed){
+        return {timestamp: parsed.timestamp, windGustSpeed: parsed.GustSpeed};
       },
       windGustDirection: function(parsed){
         return {timestamp: parsed.timestamp, windGustDirection: parsed.WindGustDirection};
       },
   };
 }
-var available_components = ["location","title","latest","waterTemperature","waveHeight","wavePeriod","gustSpeed","windDirection","windGustDirection"];
+var available_components = ["location","title","latest","waterTemperature","waveHeight","wavePeriod","windSpeed","windDirection","windGustSpeed","windGustDirection"];
 var widget = function(location,elid,options){
   options = options || {};
   options.components = options.components || available_components;
   var stockcomponents = {
-    "waterTemperature": {field: "waterTemperature", title: "Water Temperature", units: "m"},
+    "waterTemperature": {field: "waterTemperature", title: "Water Temperature", units: "&deg;C"},
     "waveHeight": {field: "waveHeight", title: "Wave Height", units: "m"},
-    "wavePeriod": {field: "wavePeriod", title: "Wave Period", units: "m"},
-    "gustSpeed": {field: "gustSpeed", title: "Gust Speed", units: "m"},
-    "windDirection": {field: "windDirection", title: "Wind Direction", units: "m"},
-    "windGustDirection": {field: "windGustDirection", title: "Wind Gust Direction", units: "m"},
+    "wavePeriod": {field: "wavePeriod", title: "Wave Period", units: "s"},
+    "windSpeed": {field: "windSpeed", title: "Wind Speed", units: "knots"},
+    "windDirection": {field: "windDirection", title: "Wind Direction", units: "degrees", directional: true},
+    "windGustSpeed": {field: "windGustSpeed", title: "Wind Gust Speed", units: "knots"},
+    "windGustDirection": {field: "windGustDirection", title: "Wind Gust Direction", units: "degrees", directional: true},
   }
   var stockcharts = []
   var components = {};
@@ -7087,16 +7088,16 @@ exports.meta = {
 },{"./cil.locations":38,"./cil.metocean":39}],38:[function(require,module,exports){
 'use strict';
 var locations = {
-dublinbay: {key: "dublinbay", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501301", name: "Dublin Bay Buoy"},
-fastnet: {key: "fastnet", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501123", name: "Fastnet"},
-coningbeg: {key: "coningbeg", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, gustSpeed: true, windDirection: true, windGustDirection: false}, mmsi: "992501074", name: "Coningbeg"},
-splaugh: {key: "splaugh", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501062", name: "Splaugh"},
-kishbank: {key: "kishbank", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501017", name: "Kish Bank"},
-southhunter: {key: "southhunter", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:false, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992351007", name: "South Hunter"},
-foyle: {key: "foyle", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501230", name: "Foyle"},
-finnis: {key: "finnis", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501164", name: "Finnis"},
-ballybunnion: {key: "ballybunnion", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:true, wavePeriod: true, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501146", name: "Ballybunnion"},
-wt2buoy: {key: "wt2buoy", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, gustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501304", name: "WT 2 Buoy"},
+dublinbay: {key: "dublinbay", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501301", name: "Dublin Bay Buoy"},
+fastnet: {key: "fastnet", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501123", name: "Fastnet"},
+coningbeg: {key: "coningbeg", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, windSpeed: true, windGustSpeed: true, windDirection: true, windGustDirection: false}, mmsi: "992501074", name: "Coningbeg"},
+splaugh: {key: "splaugh", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: false, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501062", name: "Splaugh"},
+kishbank: {key: "kishbank", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501017", name: "Kish Bank"},
+southhunter: {key: "southhunter", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:false, wavePeriod: false, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992351007", name: "South Hunter"},
+foyle: {key: "foyle", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, windGustSpeed: true,windSpeed: true, windDirection: true, windGustDirection: true}, mmsi: "992501230", name: "Foyle"},
+finnis: {key: "finnis", metocean: {location: true, title: true, latest: true, waterTemperature: true, waveHeight:true, wavePeriod: true, windGustSpeed: true,windSpeed: true, windDirection: true, windGustDirection: true}, mmsi: "992501164", name: "Finnis"},
+ballybunnion: {key: "ballybunnion", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:true, wavePeriod: true, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501146", name: "Ballybunnion"},
+wt2buoy: {key: "wt2buoy", metocean: {location: true, title: true, latest: true, waterTemperature: false, waveHeight:false, wavePeriod: false, windSpeed: true, windGustSpeed: true,windDirection: true, windGustDirection: true}, mmsi: "992501304", name: "WT 2 Buoy"},
 eastkish: {key: "eastkish", name: "East Kish", type: "Buoy", position: "53°14.349'N, 005°53.618'W", mmsi:"992501020" },
 moulditch: {key: "moulditch", name: "Moulditch", type: "Buoy", position: "53°08.430'N, 006°01.230'W", mmsi:"992501022" },
 southindia: {key: "southindia", name: "South India", type: "Buoy", position: "53°00.349'N, 005°53.346'W", mmsi:"992501030" },
@@ -7957,17 +7958,16 @@ var configure = function(Highcharts){
             valueDecimals: 2,
             useHTML: true,
             formatter: function() {
-              console.log("here i am");
                 //thursday, oct 21, 21:32 - 21:33
                 var date = Highcharts.dateFormat('%A, %b %e, %H:%M', new Date(this.x));
                 var chart = this.points[0].series.chart; //get the chart object
                 var index = this.points[0].series.xData.indexOf(this.x);
 
-                var speedSeries = chart.series[0];
-                var directionSeries = chart.series[1];
+                var directionSeries = chart.series[0];
+                //var directionSeries = chart.series[1];
 
                 var s = '<tspan style="font-size: 10px">' + date + '</tspan>';
-                s += '<br/><span style="color:#7cb5ec">●</span><span> ' + speedSeries.name +': </span><span style="font-weight:bold">' + Highcharts.numberFormat(speedSeries.data[index].y,  2) + " (knots)</span>";
+                //s += '<br/><span style="color:#7cb5ec">●</span><span> ' + speedSeries.name +': </span><span style="font-weight:bold">' + Highcharts.numberFormat(speedSeries.data[index].y,  2) + " (knots)</span>";
                 s += '<br/><span class="glyphicon glyphicon-arrow-right"></span><span> ' + directionSeries.name +': </span><span style="font-weight:bold">' + Highcharts.numberFormat(directionSeries.data[index].y,  2) + " (degrees)</span>";
 
                 return s;
@@ -8960,7 +8960,7 @@ chart_widget.prototype.constructor = chart_widget;
 
 chart_widget.prototype.createBasicChart = chart_widget.prototype.createChart;
 
-chart_widget.prototype.createSpeedDirectionChart = function(model,namespace,params){
+chart_widget.prototype.createDirectionalChart = function(model,namespace,params){
   //This is not in use yet. Some work needs done and possible refactor.
    var field = params.field;
    var displayTitle = params.title;
@@ -8974,11 +8974,42 @@ chart_widget.prototype.createSpeedDirectionChart = function(model,namespace,para
     var e = document.createElement('div');
     e.innerHTML = params.units;
     var units = e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    const draw_function = function(){
+      for(var i=0;i<this.series[0].data.length;i+=3){
+        var point = this.series[0].data[i];
+        if(point == null){
+          continue;
+        }
+        var x = point.plotX + this.plotLeft;
+        var y = 20;
 
+                        //Create arrow: Set vector values & then set rotation
+        var  arrow = this.renderer.path(
+                            [
+                                'M', 0, 7, // top of arrow
+                                'L', -1.5, 7,
+                                0, 10,
+                                1.5, 7,
+                                0, 7,
+                                0, -8 // base of arrow
+                            ]
+                        ).attr({
+                            rotation: point.y,
+                            translateX: x, // rotation center
+                            translateY: y // rotation center
+                        });
+
+                        //Set arrow style
+                        arrow.attr({
+                            stroke: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black', 'stroke-width': 1.5, zIndex: 5
+                        }).add();
+          }
+
+    };
     var chart = Highcharts.StockChart(Highcharts.merge(Highcharts.windTheme, {
         //xAxis: {offset: 5 },
         yAxis: { title: { text: ' ' }, opposite: false, floor: 0, gridLineWidth: 0, minorGridLineWidth: 0, labels: { enabled: false } },
-        series: [{name: displayTitle, data:[]},{name: displayTitle+"yyy", data:[]}],
+        series: [{name: displayTitle, data:[]}],
         plotOptions: { turboThreshold: 10000 },
         tooltip: {
             shared: true,
@@ -8987,11 +9018,16 @@ chart_widget.prototype.createSpeedDirectionChart = function(model,namespace,para
             valueSuffix: " (" + units + ")"
         },
         chart: {
-           renderTo: chartElementId
+           renderTo: chartElementId,
+           events: {
+             redraw: draw_function
+           }
          }
-     }));
+     }), function(chart){
+       draw_function.bind(chart)();
+     });
     chart.series[0].setVisible(false,false);
-    chart.series[1].setVisible(false,false);
+
 
     model.on(field,function(show_reading,val){
        var shift = chart.series[0].length >= 4000;
@@ -9000,7 +9036,6 @@ chart_widget.prototype.createSpeedDirectionChart = function(model,namespace,para
          return;
        }
        chart.series[0].addPoint([val.timestamp,value], true, shift);
-       chart.series[1].addPoint([val.timestamp,value], true, shift);
        if(show_reading){
          try{
            value  = value.toFixed(3);
@@ -9016,9 +9051,8 @@ chart_widget.prototype.createSpeedDirectionChart = function(model,namespace,para
 };
 
 chart_widget.prototype.createChart = function(model,namespace,params){
-  console.log("choosing a chart type");
-  if(params.speed && params.direction){
-    return this.createSpeedDirectionChart(model,namespace,params);
+  if(params.directional){
+    return this.createDirectionalChart(model,namespace,params);
   }else{
     return this.createBasicChart(model,namespace,params);
   }

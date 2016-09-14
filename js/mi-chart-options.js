@@ -87,17 +87,16 @@ var configure = function(Highcharts){
             valueDecimals: 2,
             useHTML: true,
             formatter: function() {
-              console.log("here i am");
                 //thursday, oct 21, 21:32 - 21:33
                 var date = Highcharts.dateFormat('%A, %b %e, %H:%M', new Date(this.x));
                 var chart = this.points[0].series.chart; //get the chart object
                 var index = this.points[0].series.xData.indexOf(this.x);
 
-                var speedSeries = chart.series[0];
-                var directionSeries = chart.series[1];
+                var directionSeries = chart.series[0];
+                //var directionSeries = chart.series[1];
 
                 var s = '<tspan style="font-size: 10px">' + date + '</tspan>';
-                s += '<br/><span style="color:#7cb5ec">●</span><span> ' + speedSeries.name +': </span><span style="font-weight:bold">' + Highcharts.numberFormat(speedSeries.data[index].y,  2) + " (knots)</span>";
+                //s += '<br/><span style="color:#7cb5ec">●</span><span> ' + speedSeries.name +': </span><span style="font-weight:bold">' + Highcharts.numberFormat(speedSeries.data[index].y,  2) + " (knots)</span>";
                 s += '<br/><span class="glyphicon glyphicon-arrow-right"></span><span> ' + directionSeries.name +': </span><span style="font-weight:bold">' + Highcharts.numberFormat(directionSeries.data[index].y,  2) + " (degrees)</span>";
 
                 return s;
