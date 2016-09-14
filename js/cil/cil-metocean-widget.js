@@ -48,9 +48,11 @@ var widget = function(location,elid,options){
   var stockcharts = []
   var components = {};
   for(var i=0;i<options.components.length;i++){
-    components[options.components[i]] = true;
-    var wanted = stockcomponents[options.components[i]];
-    if(wanted) stockcharts.push(wanted);
+    if(location.metocean[options.components[i]]){
+      components[options.components[i]] = true;
+      var wanted = stockcomponents[options.components[i]];
+      if(wanted) stockcharts.push(wanted);
+    }
   }
   var d = new Date();
   d.setDate(d.getDate() - 3);
