@@ -33,7 +33,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "doc-ready": "^1.0.4",
-    "highcharts": "^4.2.6",
+    "highcharts": "~>6.1.0",
     "mqtt": "^1.13.0"
   }
 }
